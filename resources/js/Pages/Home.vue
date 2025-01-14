@@ -2,19 +2,18 @@
 import { Head, Link } from '@inertiajs/vue3';
 import { useDarkMode } from '@/composables/useDarkMode';  // Import composable
 
+// Mendefinisikan props yang diterima oleh komponen ini
 defineProps({
     canLogin: Boolean,
     canRegister: Boolean,
-    laravelVersion: String,
-    phpVersion: String,
 });
 
-// Gunakan composable untuk dark mode
+// Menggunakan composable untuk dark mode
 const { isDark, toggleDarkMode } = useDarkMode();
 </script>
 
 <template>
-    <Head title="Welcome" />
+    <Head title="Home" />
 
     <div class="relative min-h-screen bg-gray-100 bg-center sm:flex sm:justify-center sm:items-center bg-dots-darker dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
         <div class="text-center">
@@ -33,7 +32,7 @@ const { isDark, toggleDarkMode } = useDarkMode();
 
         <!-- Tombol untuk toggle dark mode di kiri atas -->
         <div class="absolute top-4 left-4">
-            <button @click="toggleDarkMode" class="p-2 bg-gray-200 dark:bg-gray-800 rounded-full">
+            <button @click="toggleDarkMode" class="p-2 bg-gray-200 dark:bg-gray-800 rounded-full transition-all duration-300 ease-in-out transform hover:scale-110">
                 <span v-if="isDark" class="text-white">🌙</span>
                 <span v-else class="text-gray-800">🌞</span>
             </button>
@@ -41,14 +40,19 @@ const { isDark, toggleDarkMode } = useDarkMode();
     </div>
 </template>
 
-<style>
+<style scoped>
+/* Transisi pada elemen background dan warna */
 .bg-dots-darker {
     background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(0,0,0,0.07)'/%3E%3C/svg%3E");
+    transition: background-color 0.5s ease, background-image 0.5s ease;
 }
 
-@media (prefers-color-scheme: dark) {
-    .dark\:bg-dots-lighter {
-        background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(255,255,255,0.07)'/%3E%3C/svg%3E");
-    }
+.dark .bg-dots-lighter {
+    background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(255,255,255,0.07)'/%3E%3C/svg%3E");
+    transition: background-color 0.5s ease, background-image 0.5s ease;
+}
+
+button {
+    transition: background-color 0.3s ease;
 }
 </style>

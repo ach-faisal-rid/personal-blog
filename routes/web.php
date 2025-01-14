@@ -15,14 +15,13 @@ use Inertia\Inertia;
 |
 */
 
+// halaman home
 Route::get('/', function () {
     return Inertia::render('Home', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('home');
 
 Route::middleware([
     'auth:sanctum',
@@ -33,3 +32,8 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
+
+// halaman 404
+Route::get('/{any}', function () {
+    return Inertia::render('404');  // Menyajikan halaman 404
+})->where('any', '.*')->name('404');

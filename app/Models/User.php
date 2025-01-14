@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -56,6 +57,18 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $appends = [
-        'profile_photo_url',
+        'profile_photo_url',  // Menambahkan atribut 'profile_photo_url' ke hasil model
     ];
+
+    public function getProfilePhotoUrlAttribute()
+    {
+        // Periksa apakah ada gambar profil yang diupload
+        if ($this->profile_photo_path) {
+            // Kembalikan URL gambar profil yang valid
+            return url('storage/' . $this->profile_photo_path);
+        }
+
+        // Jika tidak ada gambar profil yang diupload, Jetstream akan menangani dan memberikan gambar default
+        return $this->profile_photo_url;
+    }
 }
