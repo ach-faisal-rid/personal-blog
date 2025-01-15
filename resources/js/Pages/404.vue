@@ -1,35 +1,53 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';  // Import Link dari Inertia
-import { useDarkMode } from '@/composables/useDarkMode'; // Import composable yang sama untuk dark mode
+import { Link } from "@inertiajs/vue3"; // Import Link dari Inertia
+import { useDarkMode } from "@/composables/useDarkMode"; // Import composable yang sama untuk dark mode
 
 // Menggunakan composable untuk dark mode
-const { isDark } = useDarkMode(); 
+const { isDark } = useDarkMode();
 </script>
 
 <template>
-    <div :class="{ 'dark': isDark.value }" class="min-h-screen flex items-center justify-center p-6">
-        <div class="text-center bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8 space-y-4">
-            <img src="https://i.pinimg.com/736x/17/24/01/172401ae7a8820b771bb2de5779f6d1e.jpg" alt="Lost Page"
-                class="mx-auto mb-6 w-32 h-32 object-cover animate-bounce" />
-            <h1 class="text-6xl font-extrabold text-red-500 dark:text-red-400">
-                Ups! <span class="text-xl">Halaman yang Anda cari sedang berlibur</span>
-            </h1>
-            <p class="text-lg text-gray-700 dark:text-gray-300">
-                Sepertinya Anda tersesat. Halaman ini sedang dalam perbaikan, atau bahkan bisa jadi hilang!
-            </p>
-            <p class="text-lg text-gray-700 dark:text-gray-300">
-                Tapi jangan khawatir, kami akan membantu Anda menemukan jalan pulang.
-            </p>
-            <!-- Gunakan Link dari @inertiajs/vue3 -->
-            <Link :href="route('home')"
-                class="inline-block px-6 py-2 mt-4 text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all">
-            Kembali ke Beranda
-            </Link>
-            <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
-                Aduh, halamannya hilang! <span role="img" aria-label="lost">🙈</span>
-            </p>
+        <div
+            :class="{ dark: isDark.value }"
+            class="flex items-center justify-center min-h-screen p-6"
+        >
+            <div
+                class="p-8 space-y-4 text-center bg-white rounded-lg shadow-xl dark:bg-gray-800"
+            >
+                <img
+                    src="https://i.pinimg.com/736x/17/24/01/172401ae7a8820b771bb2de5779f6d1e.jpg"
+                    alt="Lost Page"
+                    class="object-cover w-32 h-32 mx-auto mb-6 animate-bounce"
+                />
+                <h1
+                    class="text-6xl font-extrabold text-red-500 dark:text-red-400"
+                >
+                    Ups!
+                    <span class="text-xl"
+                        >Halaman yang Anda cari sedang berlibur</span
+                    >
+                </h1>
+                <p class="text-lg text-gray-700 dark:text-gray-300">
+                    Sepertinya Anda tersesat. Halaman ini sedang dalam
+                    perbaikan, atau bahkan bisa jadi hilang!
+                </p>
+                <p class="text-lg text-gray-700 dark:text-gray-300">
+                    Tapi jangan khawatir, kami akan membantu Anda menemukan
+                    jalan pulang.
+                </p>
+                <!-- Gunakan Link dari @inertiajs/vue3 -->
+                <Link
+                    :href="route('home')"
+                    class="inline-block px-6 py-2 mt-4 text-white transition-all bg-blue-600 rounded-lg hover:bg-blue-700"
+                >
+                    Kembali ke Beranda
+                </Link>
+                <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                    Aduh, halamannya hilang!
+                    <span role="img" aria-label="lost">🙈</span>
+                </p>
+            </div>
         </div>
-    </div>
 </template>
 
 <style scoped>
