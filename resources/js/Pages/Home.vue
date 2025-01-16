@@ -1,14 +1,17 @@
 <script setup>
-import { Head, Link } from "@inertiajs/vue3";
+import { Head, Link, usePage } from "@inertiajs/vue3";
 import { useDarkMode } from "@/composables/useDarkMode"; // Import composable
+import GuestLayout from "@/Layouts/GuestLayout.vue";
 
-// Mendefinisikan props yang diterima oleh komponen ini
+// Ambil properti global dari Inertia
+const page = usePage();
+const auth = page.props.auth ?? {}; // Mencegah error jika auth undefined
+
+// Definisikan props yang diterima oleh komponen ini
 defineProps({
     canLogin: Boolean,
     canRegister: Boolean,
 });
-
-import Footer from "@/Components/footer.vue";
 
 // Menggunakan composable untuk dark mode
 const { isDark, toggleDarkMode } = useDarkMode();
@@ -16,55 +19,33 @@ const { isDark, toggleDarkMode } = useDarkMode();
 
 <template>
     <Head title="Home" />
+    <GuestLayout>
         <div
-            class="relative min-h-screen bg-gray-100 bg-center sm:flex sm:justify-center sm:items-center bg-dots-darker dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white"
-        >
+            class="relative min-h-screen bg-gray-100 bg-center sm:flex sm:justify-center sm:items-center bg-dots-darker dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
             <div class="text-center">
                 <h1 class="text-4xl font-bold text-gray-800 dark:text-white">
                     Hello, Selamat Datang di Laravel
                 </h1>
-            </div>
 
-            <div
-                v-if="canLogin"
-                class="z-10 p-6 sm:fixed sm:top-0 sm:end-0 text-end"
-            >
-                <Link
-                    v-if="$page.props.auth.user"
-                    :href="route('dashboard')"
-                    class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                    >Dashboard</Link
-                >
-
-                <template v-else>
-                    <Link
-                        :href="route('login')"
-                        class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                        >Log in</Link
-                    >
-
-                    <Link
-                        v-if="canRegister"
-                        :href="route('register')"
-                        class="font-semibold text-gray-600 ms-4 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                        >Register</Link
-                    >
-                </template>
+                <!-- Tampilkan link dashboard jika sudah login -->
+                <div v-if="auth?.user" class="z-10 p-6 sm:fixed sm:top-0 sm:end-0 text-end">
+                    <Link :href="route('dashboard')"
+                        class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">
+                        Dashboard
+                    </Link>
+                </div>
             </div>
 
             <!-- Tombol untuk toggle dark mode di kiri atas -->
             <div class="absolute top-4 left-4">
-                <button
-                    @click="toggleDarkMode"
-                    class="p-2 transition-all duration-300 ease-in-out transform bg-gray-200 rounded-full dark:bg-gray-800 hover:scale-110"
-                >
+                <button @click="toggleDarkMode"
+                    class="p-2 transition-all duration-300 ease-in-out transform bg-gray-200 rounded-full dark:bg-gray-800 hover:scale-110">
                     <span v-if="isDark" class="text-white">🌞</span>
                     <span v-else class="text-gray-800">🌙</span>
                 </button>
             </div>
         </div>
-        
-        <Footer/>
+    </GuestLayout>
 </template>
 
 <style scoped>

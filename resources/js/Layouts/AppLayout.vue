@@ -2,7 +2,6 @@
 import { Head } from '@inertiajs/vue3';
 import Banner from '@/Components/Banner.vue';
 import Navigation from '@/Layouts/Navigation.vue';
-import Footer from '@/Components/footer.vue';
 defineProps({
     title: String,
 });
@@ -14,7 +13,7 @@ defineProps({
 
         <Banner />
 
-        < class="min-h-screen bg-gray-100">
+        <div class="min-h-screen bg-gray-100">
             <Navigation />
 
             <!-- Page Heading -->
@@ -28,7 +27,6 @@ defineProps({
             <main>
                 <slot />
             </main>
-            
-            <Footer/>
+            </div>
     </div>
 </template>
