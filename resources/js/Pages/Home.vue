@@ -22,17 +22,34 @@ const { isDark, toggleDarkMode } = useDarkMode();
     <GuestLayout>
         <div
             class="relative min-h-screen bg-gray-100 bg-center sm:flex sm:justify-center sm:items-center bg-dots-darker dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
-            <div class="text-center">
-                <h1 class="text-4xl font-bold text-gray-800 dark:text-white">
-                    Hello, Selamat Datang di Laravel
-                </h1>
+            
+            <!-- Konten utama dengan lebar terbatas -->
+            <div class="container mx-auto px-4 py-10">
+                <div class="text-center">
+                    <h1 class="text-4xl font-bold text-gray-800 dark:text-white">
+                        Hello, Selamat Datang di Laravel
+                    </h1>
 
-                <!-- Tampilkan link dashboard jika sudah login -->
-                <div v-if="auth?.user" class="z-10 p-6 sm:fixed sm:top-0 sm:end-0 text-end">
-                    <Link :href="route('dashboard')"
-                        class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">
-                        Dashboard
-                    </Link>
+                    <!-- Tampilkan link dashboard jika sudah login -->
+                    <div v-if="auth?.user" class="z-10 p-6 sm:fixed sm:top-0 sm:right-0 text-end">
+                        <Link :href="route('dashboard')"
+                            class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">
+                            Dashboard
+                        </Link>
+                    </div>
+                </div>
+
+                <!-- Tambahkan beberapa konten berita atau artikel -->
+                <div class="mt-8 space-y-6">
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <h2 class="text-2xl font-semibold text-gray-800">Berita Terbaru</h2>
+                        <p class="text-gray-600 mt-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec gravida mi id eros vulputate, vel placerat magna dictum.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <h2 class="text-2xl font-semibold text-gray-800">Topik Terhangat</h2>
+                        <p class="text-gray-600 mt-2">Curabitur euismod dolor at urna tempor, vitae dignissim lectus volutpat. Nunc id dolor sit amet libero sodales suscipit.</p>
+                    </div>
+                    <!-- Tambahkan lebih banyak artikel atau berita di sini -->
                 </div>
             </div>
 
@@ -60,7 +77,30 @@ const { isDark, toggleDarkMode } = useDarkMode();
     transition: background-color 0.5s ease, background-image 0.5s ease;
 }
 
-button {
-    transition: background-color 0.3s ease;
+/* Kontainer untuk konten berita atau artikel */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Sticky header */
+.sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Artikel dan berita dengan desain lebih baik */
+.bg-white {
+    background-color: #ffffff;
+}
+.rounded-lg {
+    border-radius: 8px;
+}
+.shadow-lg {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 </style>

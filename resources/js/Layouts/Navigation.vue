@@ -4,7 +4,7 @@ import { Link, router, usePage } from '@inertiajs/vue3';
 import ApplicationMark from '@/Components/ApplicationMark.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
-import NavLink from '@/Components/NavLink.vue';
+import NavLink from '@/Components/NavLink.vue'; // nggak dipakai
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 
 const page = usePage();
@@ -13,7 +13,12 @@ const auth = page.props.auth ?? {}; // Prevent errors if auth is undefined
 const showingNavigationDropdown = ref(false);
 
 const logout = () => {
-    router.post(route('logout'));
+    router.post(route('logout'), {}, {
+        onSuccess: () => {
+            page.props.auth.user = null; // Hapus user manual
+            router.visit(route('home'), { replace: true }); // Paksa redirect ke home
+        }
+    });
 };
 
 const canRegister = true; // Adjust logic if needed for the register option
@@ -26,7 +31,7 @@ const canRegister = true; // Adjust logic if needed for the register option
                 <div class="flex justify-between h-16">
                     <div class="flex">
                         <div class="flex items-center shrink-0">
-                            <Link :href="route('dashboard')">
+                            <Link :href="route('home')">
                             <ApplicationMark class="block w-auto h-9" />
                             </Link>
                         </div>
@@ -59,6 +64,10 @@ const canRegister = true; // Adjust logic if needed for the register option
                                     <div class="block px-4 py-2 text-xs text-gray-400">
                                         Manage Account
                                     </div>
+                                    
+                                    <DropdownLink v-if="auth?.user" :href="route('dashboard')">
+                                        Dashboard
+                                    </DropdownLink>
 
                                     <DropdownLink v-if="auth?.user" :href="route('profile.show')">
                                         Profile
