@@ -34,7 +34,7 @@ body.dark {
         z-index: 9999 !important; /* pastikan elemen tidak tertutup */
         position: relative !important;
     }
-  }
+}
 
 /* Background dots untuk tema terang */
 .bg-dots-darker {

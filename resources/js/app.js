@@ -9,7 +9,6 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 window.Ziggy = Ziggy;
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
-
 // Inisialisasi aplikasi Inertia.js
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
