@@ -3,6 +3,9 @@ import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
+    build: {
+        chunkSizeWarningLimit: 1500, // Sesuaikan batas ukuran chunk jika besar
+    },
     plugins: [
         vue({
             template: {
@@ -13,7 +16,10 @@ export default defineConfig({
             },
         }),
         laravel({
-            input: 'resources/js/app.js',
+            input: [
+                'resources/js/app.js',
+                'resources/css/app.css' // Tambahkan file CSS
+            ],
             refresh: true,
         }),
     ],
