@@ -20,7 +20,7 @@ class RoleUserResource extends Resource
 {
     protected static ?string $model = 'App\Models\RoleUser';
     protected static ?string $navigationGroup = 'User Management';
-    protected static ?string $navigationIcon = 'heroicon-o-shield-check';
+    protected static ?string $navigationIcon = 'heroicon-s-beaker';
 
     public static function form(Form $form): Form
     {
@@ -50,7 +50,7 @@ class RoleUserResource extends Resource
                     ->label('ID')
                     ->sortable()
                     ->searchable(),
-                    
+
                 TextColumn::make('user.name')
                     ->label('User')
                     ->sortable()
