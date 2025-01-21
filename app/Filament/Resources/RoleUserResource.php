@@ -2,41 +2,43 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\RoleResource\Pages;
+use App\Filament\Resources\RoleUserResource\Pages;
+use App\Filament\Resources\RoleUserResource\RelationManagers;
 use App\Models\Role;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
-use App\Filament\Resources\UserResource\Widgets\UserStats;
-use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class RoleResource extends Resource
+class RoleUserResource extends Resource
 {
-    protected static ?string $model = Role::class;
+    protected static ?string $model = 'App\Models\RoleUser';
     protected static ?string $navigationGroup = 'User Management';
     protected static ?string $navigationIcon = 'heroicon-o-shield-check';
-
-    public static function getWidgets(): array
-    {
-        return [
-            UserStats::class,
-        ];
-    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                    TextInput::make('name')
-                        ->label('Role Name')
-                        ->required()
-                        ->rule('unique:roles,name,' . (request()->route('record') ? request()->route('record') : 'NULL') . ',id'),
+                Select::make('role_id')
+                    ->label('Role')
+                    ->options(
+                        Role::all()->pluck('name', 'id')->toArray()
+                    )
+                    ->required(),
+
+                Select::make('user_id')
+                    ->label('User')
+                    ->options(
+                        User::all()->pluck('name', 'id')->toArray()
+                    )
+                    ->required(),
             ]);
     }
 
@@ -48,9 +50,15 @@ class RoleResource extends Resource
                     ->label('ID')
                     ->sortable()
                     ->searchable(),
+                    
+                TextColumn::make('user.name')
+                    ->label('User')
+                    ->sortable()
+                    ->searchable()
+                    ->badge(),
 
-                TextColumn::make('name')
-                    ->label('Role Name')
+                TextColumn::make('role.name')
+                    ->label('Role')
                     ->sortable()
                     ->searchable()
                     ->badge(),
@@ -78,9 +86,9 @@ class RoleResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRoles::route('/'),
-            'create' => Pages\CreateRole::route('/create'),
-            'edit' => Pages\EditRole::route('/{record}/edit'),
+            'index' => Pages\ListRoleUsers::route('/'),
+            'create' => Pages\CreateRoleUser::route('/create'),
+            'edit' => Pages\EditRoleUser::route('/{record}/edit'),
         ];
     }
 }
