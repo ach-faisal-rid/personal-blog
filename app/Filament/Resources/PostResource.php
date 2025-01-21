@@ -54,9 +54,28 @@ class PostResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->getStateUsing(function ($record) {
-                        $shortenedUrl = substr($record->youtube_url, 0, 30);
-                        return $shortenedUrl . '...';
-                    }),
+                        $url = $record->youtube_url;
+                        $shortenedUrl = substr($url, 0, 30); // Ambil 30 karakter pertama dari URL
+                        $icon = '';
+                
+                        // Cek platform sosial media dan pilih ikon yang sesuai
+                        if (preg_match('/youtube\.com|youtu\.be/', $url)) {
+                            $icon = '<x-heroicon-o-video-camera class="w-5 h-5 text-red-600" />';
+                        } elseif (preg_match('/tiktok\.com/', $url)) {
+                            $icon = '<x-heroicon-o-play class="w-5 h-5 text-black" />';
+                        } elseif (preg_match('/instagram\.com/', $url)) {
+                            $icon = '<x-heroicon-o-camera class="w-5 h-5 text-pink-600" />';
+                        }
+                
+                        // Menampilkan ikon dan URL yang dipersingkat
+                        if ($icon) {
+                            return "<a href='{$url}' target='_blank'>{$icon} {$shortenedUrl}...</a>";
+                        }
+                
+                        // Jika tidak ada ikon, hanya menampilkan URL yang dipersingkat
+                        return "<a href='{$url}' target='_blank'>{$shortenedUrl}...</a>";
+                    })
+                    ->html(),
             ])
             ->filters([
                 //
