@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
@@ -19,6 +19,7 @@ class User extends Authenticatable
     use Notifiable;
     use TwoFactorAuthenticatable;
 
+    protected $table = "users";
     /**
      * The attributes that are mass assignable.
      *
@@ -70,5 +71,18 @@ class User extends Authenticatable
 
         // Jika tidak ada gambar profil yang diupload, Jetstream akan menangani dan memberikan gambar default
         return $this->profile_photo_url;
+    }
+
+    protected function password(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => bcrypt($value),
+        );
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'role_users')
+            ->using(RoleUser::class);
     }
 }
