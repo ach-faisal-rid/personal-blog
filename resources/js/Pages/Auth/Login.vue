@@ -52,7 +52,7 @@ const submit = () => {
 
             <div class="relative mt-4">
                 <InputLabel for="password" value="Password" />
-                <TextInput id="password" v-model="form.password"
+                <TextInput type="password" id="password" v-model="form.password"
                     class="block w-full pr-10 mt-1" required autocomplete="current-password" />
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>

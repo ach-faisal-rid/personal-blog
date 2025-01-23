@@ -9,7 +9,7 @@ const profile = ref({
     job: 'Digital Craftsman ( Artist / Developer / Designer )',
     location: 'Jombang, Indonesia',
     bio: [
-        { year: '2000', text: 'Born in Osaka (大阪), Japan.' },
+        { year: '2000', text: 'Born in Jombang, Indonesia.' },
         { year: '2016', text: 'my journey begin as a web developer.' },
         { year: '2019', text: 'i retire about web developer an in this year i start to learn to sell product' },
         { year: '2022', text: 'i comeback to batch 2 journey as a web developer.' },
@@ -58,13 +58,8 @@ const profile = ref({
             <div class="mt-10">
                 <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Work</h3>
                 <p class="mt-2 text-gray-600 dark:text-gray-400">
-                    Takuya is a freelance full-stack developer based in Osaka with a passion for building digital
+                    Faisal is a freelance full-stack developer based in Jombang with a passion for building digital
                     services.
-                    He runs a product called
-                    <Link href="/works/inkdrop" class="text-teal-500">Inkdrop</Link> and a YouTube
-                    channel "<a href="https://www.youtube.com/devaslife" target="_blank" class="text-teal-500">Dev as
-                        Life</a>"
-                    with over 100k subscribers.
                 </p>
                 <div class="mt-4 text-center">
                     <Link href="/works" class="px-6 py-2 text-white bg-teal-500 rounded-md">My Portfolio</Link>
