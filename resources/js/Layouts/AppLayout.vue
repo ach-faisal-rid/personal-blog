@@ -9,6 +9,7 @@ defineProps({
 
 <template>
     <div>
+
         <Head :title="title" />
 
         <Banner />
@@ -27,6 +28,6 @@ defineProps({
             <main>
                 <slot />
             </main>
-            </div>
+        </div>
     </div>
 </template>

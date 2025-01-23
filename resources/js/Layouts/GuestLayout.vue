@@ -1,6 +1,5 @@
 <script setup>
 import { Head, usePage } from "@inertiajs/vue3";
-import Banner from "@/Components/Banner.vue";
 import Navigation from "@/Layouts/Navigation.vue";
 import Footer from '@/Components/Footer.vue';
 
@@ -12,18 +11,15 @@ defineProps({
 // Mengambil properti global dari Inertia.js
 const page = usePage();
 // Default ke objek kosong untuk menghindari error
-const auth = page.props.auth ?? {}; 
+const auth = page.props.auth ?? {};
 
 </script>
 
 <template>
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-        <Head :title="title" />  <!-- Tidak akan error karena title sudah didefinisikan -->
 
-        <Banner />
-       
-        <!-- Pastikan Navigation diberikan auth -->
-        <Navigation :auth="auth" class="sticky top-0 z-50"/>
+        <Head :title="title" />
+        <Navigation :auth="auth" />
 
         <!-- Page Heading -->
         <header v-if="$slots.header" class="bg-white shadow dark:bg-gray-800">
@@ -38,7 +34,7 @@ const auth = page.props.auth ?? {};
         </main>
 
         <!-- Footer -->
-        <Footer class="sticky bottom-0 w-full" />
+        <Footer />
 
     </div>
 </template>

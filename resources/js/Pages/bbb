@@ -1,0 +1,14 @@
+<div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+
+    <Head :title="title" />
+    <Navigation :auth="auth" class="sticky top-0 z-50" />
+    <main class="container p-4 pt-6 mx-auto">
+        <header v-if="$slots.header" class="bg-white shadow dark:bg-gray-800">
+            <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <slot :auth="auth"></slot>
+            </div>
+        </header>
+        <slot />
+    </main>
+    <Footer class="sticky bottom-0 w-full" />
+</div>
