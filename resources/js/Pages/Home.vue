@@ -30,9 +30,9 @@ const profile = ref({
     <Head title="Home" />
 
     <GuestLayout>
-        <div class="container px-4 py-10 mx-auto">
+        <div class="container relative min-h-screen px-4 py-10 mx-auto bg-gray-100 bg-center bg-dots-darker dark:bg-dots-lighter dark:bg-gray-900">
             <!-- Introduction -->
-            <div class="p-4 mb-6 text-center bg-gray-200 shadow-md dark:bg-gray-800 rounded-2xl">
+            <div class="p-4 mb-6 text-center bg-gray-200 shadow-md rounded-2xl dark:bg-gray-800">
                 <p class="text-xl font-semibold dark:text-white">
                     Hello, I'm an indie app developer based in {{ profile.location }}!
                 </p>
@@ -94,6 +94,52 @@ const profile = ref({
                     </a>
                 </div>
             </div>
+
+            <!--  -->
+            <div class="px-4 mx-auto max-w-7xl">
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <a href="https://www.youtube.com/@ach-faisal-rid" target="_blank"
+                        class="block overflow-hidden transition-transform transform rounded-lg shadow-md hover:scale-105">
+                        <img :src="thumbYouTube" alt="ach-faisal-rid" class="w-full h-auto" />
+                        <div class="p-4">
+                            <h3 class="text-lg font-bold">faisal ach rid</h3>
+                            <p>My YouTube channel (&gt; 31 subs)</p>
+                        </div>
+                    </a>
+
+                    <a href="#" target="_blank"
+                        class="block overflow-hidden transition-transform transform rounded-lg shadow-md hover:scale-105">
+                        <img :src="thumbnetdown" alt="netdown" class="w-full h-auto" />
+                        <div class="p-4">
+                            <h3 class="text-lg font-bold">netdown</h3>
+                            <p>A Markdown note-taking app</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <!-- Section Title -->
+                <h3 class="inline-block mb-4 text-2xl font-bold border-b-2 border-teal-500">
+                    Newsletter
+                </h3>
+
+                <!-- Description -->
+                <p class="text-gray-600">
+                    Join me on a behind-the-scenes coding journey. Weekly updates on
+                    projects, tutorials, and videos
+                </p>
+
+                <!-- Button -->
+                <div class="my-4 text-center">
+                    <a href="#" target="_blank"
+                        class="inline-flex items-center px-6 py-3 text-white transition-all bg-teal-500 rounded-lg shadow-md hover:bg-teal-600">
+                        <span class="mr-2">📧</span>
+                        Sign up my newsletter here
+                    </a>
+                </div>
+            </div>
+
         </div>
     </GuestLayout>
 </template>
