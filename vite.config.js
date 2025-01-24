@@ -4,9 +4,15 @@ import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
     build: {
+        resolve: {
+            alias: {
+              '@': '/resources/js',
+            },
+          },
         chunkSizeWarningLimit: 1500, // Sesuaikan batas ukuran chunk jika besar
     },
     plugins: [
+        
         vue({
             template: {
                 transformAssetUrls: {
@@ -18,7 +24,7 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/js/app.js',
-                'resources/css/app.css' // Tambahkan file CSS
+                'resources/css/app.css'
             ],
             refresh: true,
         }),

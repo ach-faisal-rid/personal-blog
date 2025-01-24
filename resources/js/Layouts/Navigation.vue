@@ -18,14 +18,29 @@ const showingNavigationDropdown = ref(false);
                     <!-- Logo / Home Link -->
                     <div class="flex items-center">
                         <Link :href="route('home')">
-                            <ApplicationMark class="block w-auto h-9" />
+                        <ApplicationMark class="block w-auto h-9" />
                         </Link>
                     </div>
 
                     <!-- Desktop Navigation -->
                     <div class="hidden sm:flex sm:items-center sm:space-x-6">
-                        <Link :href="route('home')">About</Link>
+                        <Link :href="route('home')" :class="{
+                            'text-gray-600 dark:text-gray-300': true,
+                            'text-indigo-500 border-b-2 border-indigo-500': $page.url === route('home'),
+                            'hover:text-indigo-500 hover:border-indigo-500 transition-all duration-300': true
+                        }" class="pb-1 border-b-2 border-transparent">
+                        About
+                        </Link>
+
+                        <Link :href="route('posts.index')" :class="{
+                            'text-gray-600 dark:text-gray-300': true,
+                            'text-indigo-500 border-b-2 border-indigo-500': $page.url === route('posts.index'),
+                            'hover:text-indigo-500 hover:border-indigo-500 transition-all duration-300': true
+                        }" class="pb-1 border-b-2 border-transparent">
+                        Posts
+                        </Link>
                     </div>
+
 
                     <!-- Dark Mode Toggle -->
                     <div class="flex items-center space-x-4">
@@ -37,7 +52,7 @@ const showingNavigationDropdown = ref(false);
                         <!-- Desktop Navigation menu -->
                         <DesktopNav />
                     </div>
-                    
+
                     <!-- Mobile Navigation Toggle -->
                     <div class="sm:hidden">
                         <button @click="showingNavigationDropdown = !showingNavigationDropdown"

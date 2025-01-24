@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\Landing\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,11 +18,17 @@ use Inertia\Inertia;
 
 // halaman home
 Route::get('/', function () {
-    return Inertia::render('Home', [
+    return Inertia::render('Home1', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
     ]);
 })->name('home');
+
+// halaman post
+Route::get('/posts', [PostController::class, 'index'])
+    ->name('posts.index');
+Route::get('/post/{id}', [PostController::class, 'show'])
+    ->name('post.show');
 
 Route::middleware([
     'auth:sanctum',
