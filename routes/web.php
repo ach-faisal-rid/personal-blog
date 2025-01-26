@@ -3,7 +3,6 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\Landing\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,12 +23,7 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-// halaman post
-Route::get('/posts', [PostController::class, 'index'])
-    ->name('posts.index');
-Route::get('/post/{id}', [PostController::class, 'show'])
-    ->name('post.show');
-
+// rute untuk user dashbord
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
