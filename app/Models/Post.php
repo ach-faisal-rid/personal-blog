@@ -10,4 +10,13 @@ class Post extends Model
     use HasFactory;
     protected $table = 'posts';
     protected $fillable = ['title', 'description', 'youtube_url'];
+
+    public function thumbnails()
+    {
+        return $this->belongsToMany(Thumbnail::class,
+         'post_thumbnails',
+         'post_id',
+        'thumbnail_id')
+        ->withPivot('id');
+    }
 }

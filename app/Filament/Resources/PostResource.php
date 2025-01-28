@@ -13,6 +13,7 @@ use Filament\Tables\Table;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -45,10 +46,35 @@ class PostResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable()
+                    ->searchable(),
+
                 TextColumn::make('title')
                     ->label('Title')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->limit(30),
+
+                    // untuk menambahkan kolom gambar
+                    // TextColumn::make('thumbnails.url')
+                    //     ->label('Thumbnail URL')
+                    //     ->sortable()
+                    //     ->searchable()
+                    //     ->getStateUsing(fn 
+                    //     ($record) => 
+                    //     $record->thumbnails->pluck('url')->join(', '))
+                    //     ->badge(),
+
+                    ImageColumn::make('thumbnail_url')
+                        ->label('Thumbnail')
+                        ->getStateUsing(fn 
+                            ($record) => 
+                            $record->thumbnails->pluck('url')->first() ?? null)
+                        ->size(100)
+                        ->square(),
+                    
                 TextColumn::make('youtube_url')
                     ->label('YouTube Link')
                     ->sortable()
