@@ -2,25 +2,24 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PostThumbnailResource\Pages;
-use App\Filament\Resources\PostThumbnailResource\RelationManagers;
-use Filament\Forms;
+use App\Filament\Resources\PostCategoryResource\Pages;
+use App\Filament\Resources\PostCategoryResource\RelationManagers;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Models\Category;
 use App\Models\Post;
-use App\Models\PostThumbnail;
-use App\Models\Thumbnail;
-use Filament\Forms\Components\Select;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ImageColumn;
+use App\Models\PostCategory;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class PostThumbnailResource extends Resource
+class PostCategoryResource extends Resource
 {
-    protected static ?string $model = PostThumbnail::class;
+    protected static ?string $model = PostCategory::class;
     protected static ?string $navigationGroup = 'Content Management';
     protected static ?string $navigationIcon = 'heroicon-o-circle-stack';
 
@@ -33,9 +32,9 @@ class PostThumbnailResource extends Resource
                     ->options(fn () => Post::pluck('title', 'id')->toArray())
                     ->required(),
 
-                Select::make('thumbnail_id')
-                    ->label('Thumbnail')
-                    ->options(fn () => Thumbnail::pluck('url', 'id')->toArray())
+                Select::make('category_id')
+                    ->label('Category')
+                    ->options(fn () => Category::pluck('name', 'id')->toArray())
                     ->required(),
             ]);
     }
@@ -54,10 +53,8 @@ class PostThumbnailResource extends Resource
                     ->sortable()
                     ->searchable(),
 
-                ImageColumn::make('thumbnail.url')
-                    ->label('Thumbnail')
-                    ->height(80) // Mengatur ukuran gambar
-                    ->width(80)
+                TextColumn::make('category.name')
+                    ->label('Category')
                     ->sortable()
                     ->searchable(),
             ])
@@ -84,9 +81,9 @@ class PostThumbnailResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPostThumbnails::route('/'),
-            'create' => Pages\CreatePostThumbnail::route('/create'),
-            'edit' => Pages\EditPostThumbnail::route('/{record}/edit'),
+            'index' => Pages\ListPostCategories::route('/'),
+            'create' => Pages\CreatePostCategory::route('/create'),
+            'edit' => Pages\EditPostCategory::route('/{record}/edit'),
         ];
     }
 }

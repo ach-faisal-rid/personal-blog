@@ -74,6 +74,12 @@ class PostResource extends Resource
                             $record->thumbnails->pluck('url')->first() ?? null)
                         ->size(100)
                         ->square(),
+
+                TextColumn::make('categories.name')
+                    ->label('Category')
+                    ->sortable()
+                    ->searchable()
+                    ->badge(),
                     
                 TextColumn::make('youtube_url')
                     ->label('YouTube Link')

@@ -19,4 +19,13 @@ class Post extends Model
         'thumbnail_id')
         ->withPivot('id');
     }
+    
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class,
+         'post_categories',
+         'post_id',
+        'category_id')
+        ->withPivot('id');
+    }
 }

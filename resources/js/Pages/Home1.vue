@@ -164,7 +164,7 @@ const profile = ref({
                         class="block overflow-hidden transition-transform transform rounded-lg shadow-xl hover:scale-105 hover:shadow-2xl group"
                     >
                         <img
-                            :src="thumbYouTube"
+                            src="https://i.pinimg.com/736x/3b/a8/04/3ba8040d055d897b1581949eedf29b73.jpg"
                             alt="ach-faisal-rid"
                             class="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-110"
                         />
@@ -188,7 +188,7 @@ const profile = ref({
                         class="block overflow-hidden transition-transform transform rounded-lg shadow-xl hover:scale-105 hover:shadow-2xl group"
                     >
                         <img
-                            :src="thumbnetdown"
+                            src="https://i.pinimg.com/736x/97/00/60/9700602e0a37db9dcbe3cef6948040e5.jpg"
                             alt="netdown"
                             class="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-110"
                         />
