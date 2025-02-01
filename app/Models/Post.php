@@ -28,4 +28,22 @@ class Post extends Model
         'category_id')
         ->withPivot('id');
     }
+
+    public function postUsers()
+    {
+        return $this->hasMany(PostUser::class);
+    }
+
+    public function authors()
+    {
+        return $this->hasManyThrough(
+            User::class,       // Model tujuan
+            PostUser::class,   // Model perantara
+            'post_id',         // Foreign key di post_users
+            'id',              // Foreign key di users
+            'id',              // Primary key di posts
+            'role_user_id'     // Foreign key di post_users yang merujuk ke role_users
+        )->join('role_users', 'post_users.role_user_id', '=', 'role_users.id')
+         ->select('users.*');
+    }
 }

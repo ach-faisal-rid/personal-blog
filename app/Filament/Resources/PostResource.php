@@ -67,16 +67,22 @@ class PostResource extends Resource
                     //     $record->thumbnails->pluck('url')->join(', '))
                     //     ->badge(),
 
-                    ImageColumn::make('thumbnail_url')
-                        ->label('Thumbnail')
-                        ->getStateUsing(fn 
-                            ($record) => 
-                            $record->thumbnails->pluck('url')->first() ?? null)
-                        ->size(100)
-                        ->square(),
+                ImageColumn::make('thumbnail_url')
+                    ->label('Thumbnail')
+                    ->getStateUsing(fn 
+                        ($record) => 
+                        $record->thumbnails->pluck('url')->first() ?? null)
+                    ->size(100)
+                    ->square(),
 
                 TextColumn::make('categories.name')
                     ->label('Category')
+                    ->sortable()
+                    ->searchable()
+                    ->badge(),
+
+                TextColumn::make('authors.name')
+                    ->label('Author')
                     ->sortable()
                     ->searchable()
                     ->badge(),

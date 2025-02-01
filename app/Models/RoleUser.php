@@ -24,4 +24,8 @@ class RoleUser extends Pivot
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function postUsers() {
+        return $this->hasMany(PostUser::class, 'role_user_id');
+    }
 }
