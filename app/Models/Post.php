@@ -46,4 +46,16 @@ class Post extends Model
         )->join('role_users', 'post_users.role_user_id', '=', 'role_users.id')
          ->select('users.*');
     }
+
+    public function comments()
+    {
+        return $this->hasManyThrough(
+            Comment::class,  // Model tujuan
+            PostUser::class, // Model perantara
+            'post_id',       // Foreign key di post_users
+            'post_user_id',  // Foreign key di comments
+            'id',             // Primary key di posts
+            'id'              // Foreign key di post_users
+        );
+    }
 }

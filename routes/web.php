@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\Landing\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,11 @@ Route::get('/', function () {
         'canRegister' => Route::has('register'),
     ]);
 })->name('home');
+
+Route::get('/posts', [PostController::class, 'index'])
+    ->name('posts.index');
+Route::get('post/{id}', [PostController::class,'show'])
+    ->name('posts.show');
 
 // rute untuk user dashbord
 Route::middleware([

@@ -14,12 +14,17 @@ class PostUser extends Model
         'post_id'
     ];
     
-    public function roleUser () {
-        return $this->belongsTo(RoleUser::class, 'role_user_id');
-    }
-
     public function post (){
         return $this->belongsTo(Post::class, 'post_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'role_user_id'); // pastikan 'role_user_id' adalah foreign key yang benar
+    }
+
+    public function roleUser () {
+        return $this->belongsTo(RoleUser::class, 'role_user_id');
     }
 
     public function comments()
