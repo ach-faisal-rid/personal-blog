@@ -20,7 +20,7 @@ function fetchPage(url) {
         <div
             class="flex flex-col items-center justify-center min-h-screen bg-dots-darker dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white"
         >
-            <h1 class="text-2xl font-bold mb-6">Popular Posts</h1>
+            <h1 class="text-2xl font-bold mb-4 mt-5">Popular Posts</h1>
             <!-- grid layout -->
             <div class="mt-10 px-4 max-w-lg mx-auto max-w-7xl">
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">

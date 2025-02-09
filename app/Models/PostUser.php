@@ -20,7 +20,7 @@ class PostUser extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'role_user_id'); // pastikan 'role_user_id' adalah foreign key yang benar
+        return $this->roleUser->user ?? null; 
     }
 
     public function roleUser () {

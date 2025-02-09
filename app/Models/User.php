@@ -30,6 +30,7 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
+        'profile_photo_path'
     ];
 
     /**
@@ -59,7 +60,7 @@ class User extends Authenticatable implements FilamentUser
      * @var array<int, string>
      */
     protected $appends = [
-        'profile_photo_url',  // Menambahkan atribut 'profile_photo_url' ke hasil model
+        'profile_photo_url',
     ];
 
     public function getProfilePhotoUrlAttribute()
@@ -70,32 +71,42 @@ class User extends Authenticatable implements FilamentUser
             return url('storage/' . $this->profile_photo_path);
         }
 
-        // Jika tidak ada gambar profil yang diupload, Jetstream akan menangani dan memberikan gambar default
+        /**
+        *   Jika tidak ada gambar profil yang diupload, 
+        *   Jetstream akan menangani dan memberikan gambar default
+        */
         return $this->profile_photo_url;
     }
 
     protected function password(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => bcrypt($value),
+            // password akan dienkripsi sebelum disimpan
+            set: fn ($value) => bcrypt($value), 
         );
     }
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class, 'role_users', 'user_id', 'role_id')->using(RoleUser::class)->withTimestamps();
+        return $this->belongsToMany(Role::class, 
+        'role_users', 'user_id', 'role_id'
+        )->using(RoleUser::class)->withTimestamps();
     }
 
     public function hasRole($roleName): bool
     {
-        return $this->roles()->where('name', $roleName)->exists();
+        return $this->roles()->whereRaw('LOWER(name) = ?', 
+        [strtolower($roleName)])->exists();
     }
 
     /**
-     * Tentukan apakah pengguna dapat mengakses Filament.
+     * Tentukan apakah pengguna dapat mengakses Filament 
+     * hanya bisa dibukan oleh admin atau super admin dari role-user.
      */
     public function canAccessPanel(\Filament\Panel $panel): bool
     {
-        return $this->hasRole('admin') || $this->hasRole('super admin');
+        return $this->roles()->whereIn('name', 
+        ['admin', 'super admin']
+        )->exists();
     }
 }
