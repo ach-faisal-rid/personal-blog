@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -40,14 +41,18 @@ class ThumbnailResource extends Resource
                 TextColumn::make('id')
                     ->label('ID')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->width(50),
 
-                TextColumn::make('url')
-                    ->label('Thumbnail URL')
-                    ->url(fn($record) => $record->url, true) // Jadikan URL sebagai tautan
-                    ->searchable() // Aktifkan pencarian
+                ImageColumn::make('url')
+                    ->label('Thumbnail Image')
+                    ->height(100)
+                    ->width(80)
                     ->sortable()
-                    ->badge(), // Aktifkan pengurutan
+                    ->searchable()
+                    ->extraAttributes([
+                        'style' => 'object-fit: cover; border-radius: 2px;'
+                    ]),
             ])
             ->filters([
                 //

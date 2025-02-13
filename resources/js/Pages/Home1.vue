@@ -211,13 +211,14 @@ const profile = ref({
             <div class="mt-10 max-w-lg mx-auto">
                 <!-- Section Title -->
                 <h3
-                    class="inline-block mb-4 text-2xl font-bold border-b-2 border-teal-500"
+                    class="inline-block mb-4 text-2xl font-bold border-b-2 
+                    border-teal-500 text-gray-900 dark:text-white"
                 >
                     Newsletter
                 </h3>
 
                 <!-- Description -->
-                <p class="text-gray-600">
+                <p class="text-gray-600 dark:text-gray-400">
                     Join me on a behind-the-scenes coding journey. Weekly
                     updates on projects, tutorials, and videos
                 </p>

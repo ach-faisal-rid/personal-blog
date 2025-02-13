@@ -12,8 +12,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -56,16 +56,6 @@ class PostResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->limit(30),
-
-                    // untuk menambahkan kolom gambar
-                    // TextColumn::make('thumbnails.url')
-                    //     ->label('Thumbnail URL')
-                    //     ->sortable()
-                    //     ->searchable()
-                    //     ->getStateUsing(fn 
-                    //     ($record) => 
-                    //     $record->thumbnails->pluck('url')->join(', '))
-                    //     ->badge(),
 
                 ImageColumn::make('thumbnail_url')
                     ->label('Thumbnail')
