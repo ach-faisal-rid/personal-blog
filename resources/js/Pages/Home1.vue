@@ -56,6 +56,7 @@ const profile = ref({
 <template>
     <Head title="Home" />
     <GuestLayout>
+        
         <div
             class="flex flex-col items-center justify-center min-h-screen bg-dots-darker dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white"
         >
