@@ -4,27 +4,21 @@ namespace App\Filament\Resources;
 
 use App\Models\Role;
 use Filament\Forms\Form;
-use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\ViewAction;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteBulkAction;
 use App\Filament\Resources\RoleResource\Pages;
 use App\Filament\Resources\RoleResource\Widgets\RoleStats;
 
-
-class RoleResource extends Resource {
+class RoleResource extends Resource
+{
     protected static ?string $model = Role::class;
     protected static ?string $navigationGroup = 'User Management';
     protected static ?string $navigationIcon = 'heroicon-o-shield-check';
-    protected static ?string $navigationGroupLabel = 'Roles & Permisions';
 
-    protected function getHeaderWidgets(): array
+    public static function getWidgets(): array
     {
         return [
             RoleStats::class,
@@ -55,35 +49,17 @@ class RoleResource extends Resource {
                     ->label('Role Name')
                     ->sortable()
                     ->searchable()
-                    ->badge()
-                    ->color(fn ($record) => match ($record->name) {
-                        'admin' => 'danger',
-                        'editor' => 'warning',
-                        'user' => 'success',
-                        default => 'gray',
-                    }),
-
-                    TextColumn::make('users_count')
-                        ->label('User in Role')
-                        ->counts('users')
-                        ->sortable()
-                        ->color('primary'),
+                    ->badge(),
             ])
-
             ->filters([
-                SelectFilter::make('users')
-                ->relationship('users', 'name')
-                ->searchable()
-                ->label('Filter by users'),
+                //
             ])
             ->actions([
-                ViewAction::make(),
-                EditAction::make(),
-                DeleteAction::make(),
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make()->requiresConfirmation(),
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -99,7 +75,6 @@ class RoleResource extends Resource {
     {
         return [
             'index' => Pages\ListRoles::route('/'),
-            'view' => Pages\ViewRole::route('/{record}'),
             'create' => Pages\CreateRole::route('/create'),
             'edit' => Pages\EditRole::route('/{record}/edit'),
         ];

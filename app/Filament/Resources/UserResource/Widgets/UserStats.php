@@ -2,53 +2,39 @@
 
 namespace App\Filament\Resources\UserResource\Widgets;
 
-use Filament\Widgets\ChartWidget;
-use App\Models\User;
 use Carbon\Carbon;
+use App\Models\User;
+use Filament\Widgets\StatsOverviewWidget as BaseWidget;
+use Filament\Widgets\StatsOverviewWidget\Card;
 
-class UserStats extends ChartWidget
-{
-    // Heading untuk widget
-    protected static ?string $heading = 'User Statistics';
-
-    // Jenis chart (bisa diubah ke 'bar', 'pie', dll.)
-    protected static ?string $type = 'line';
-
-    protected function getData(): array
+class UserStats extends BaseWidget {
+    protected function getCards(): array
     {
-        // Mengambil data jumlah pengguna per bulan dalam setahun terakhir
-        $usersPerMonth = User::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-            ->whereYear('created_at', Carbon::now()->year)
-            ->groupBy('month')
-            ->orderBy('month')
-            ->get();
-
-        // Memetakan data ke format yang sesuai
-        $data = [];
-        $labels = [];
-
-        foreach (range(1, 12) as $month) {
-            $labels[] = Carbon::create()->month($month)->format('F'); // Nama bulan
-            $data[] = $usersPerMonth->firstWhere('month', $month)->count ?? 0; // Jumlah pengguna
-        }
+        $totalUsers = User::count();
+        $usersToday = User::whereDate('created_at', Carbon::today())->count();
+        $usersThisMonth = User::whereMonth('created_at', Carbon::now()->month)->count();
+        $usersThisYear = User::whereYear('created_at', Carbon::now()->year)->count();
 
         return [
-            'datasets' => [
-                [
-                    'label' => 'New Users',
-                    'data' => $data,
-                    'backgroundColor' => 'rgba(75, 192, 192, 0.2)', // Warna chart
-                    'borderColor' => 'rgba(75, 192, 192, 1)',
-                    'borderWidth' => 2,
-                ],
-            ],
-            'labels' => $labels,
-        ];
-    }
+            Card::make('Total Users', $totalUsers)
+                ->description('Total Registered Users')
+                ->icon('heroicon-o-user-group')
+                ->color('primary'),
 
-    protected function getType(): string
-    {
-        // Tetapkan jenis chart (sesuai properti statis $type)
-        return static::$type;
+            Card::make('Users Today', $usersToday)
+                ->description('New users today')
+                ->color('success')
+                ->chart([rand(1, 5), rand(5, 10), rand(10, 20), $usersToday]),
+
+            Card::make('Users This Month', $usersThisMonth)
+                ->description('New users this month')
+                ->color('warning')
+                ->chart([rand(10, 50), rand(50, 100), $usersThisMonth]),
+
+            Card::make('Users This Year', $usersThisYear)
+                ->description('New users this year')
+                ->color('info')
+                ->chart([rand(100, 300), rand(300, 500), $usersThisYear]),
+        ];
     }
 }
