@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\RoleResource\Widgets;
 
 use App\Models\Role;
+use Filament\Support\Enums\IconPosition;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
@@ -23,9 +24,13 @@ class RoleStats extends BaseWidget
 
         // Kembalikan data statistik yang akan ditampilkan
         return [
-            Stat::make('Total Roles', $roleCount)   // Label untuk statistik dan nilai statistik
-                ->icon('heroicon-o-shield-check') // Ikon untuk statistik (sesuaikan dengan ikon yang diinginkan)
-                ->description('Total number of roles in the system'), // Deskripsi tambahan
+            // Label untuk statistik dan nilai statistik
+            Stat::make('Total Roles', $roleCount) 
+                // Ikon untuk statistik (sesuaikan dengan ikon yang diinginkan)
+                ->descriptionIcon('heroicon-o-shield-check', IconPosition::Before) 
+                // Deskripsi tambahan
+                ->description('Total number of roles in the system')
+                ->color('primary'),
         ];
     }
 }
