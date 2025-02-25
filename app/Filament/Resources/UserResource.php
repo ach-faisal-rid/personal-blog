@@ -69,12 +69,12 @@ class UserResource extends Resource {
                 Section::make('Profile Picture')
                 ->schema([
                     
-                    FileUpload::make('profile_photo_profile')
+                    FileUpload::make('profile_photo_path')
                         ->label('Avatar')
                         ->image()
                         ->directory('profile-photos')
                         ->maxSize(2048)
-                        ->columnSpanFull()
+                        ->columnSpanFull(),
                 
                 ])->columns(1),
             ]);
@@ -88,28 +88,34 @@ class UserResource extends Resource {
                     TextColumn::make('id')
                         ->label('ID')
                         ->sortable()
-                        ->searchable(),
-
+                        ->searchable()
+                        ->icon('heroicon-o-hashtag')
+                        ->color('gray'),
+        
                     ImageColumn::make('profile_photo_path')
                         ->label('Avatar')
                         ->circular()
-                        ->size(50),
-    
+                        ->size(45),
+            
                     TextColumn::make('name')
                         ->label('Name')
                         ->sortable()
-                        ->searchable(),
-    
+                        ->searchable()
+                        ->icon('heroicon-o-user-circle')
+                        ->weight('bold')
+                        ->color('primary'),
+            
                     TextColumn::make('email')
                         ->label('Email')
                         ->icon('heroicon-m-envelope')
                         ->sortable()
                         ->searchable(),
-    
+            
                     TextColumn::make('roles.name')
                         ->label('Roles')
                         ->icon('heroicon-o-shield-check')
-                        ->badge(),
+                        ->badge()
+                        ->color(fn ($record) => $record->roles->contains('Admin') ? 'danger' : 'success'),
                 ]),
             ])
             ->filters([
