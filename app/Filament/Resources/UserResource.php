@@ -16,8 +16,10 @@ use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Forms\Components\FileUpload;
@@ -80,8 +82,7 @@ class UserResource extends Resource {
             ]);
     }
 
-    public static function table(Table $table): Table
-    {
+    public static function table(Table $table): Table {
         return $table
             ->columns([
                 Split::make([
@@ -90,32 +91,36 @@ class UserResource extends Resource {
                         ->sortable()
                         ->searchable()
                         ->icon('heroicon-o-hashtag')
-                        ->color('gray'),
-        
+                        ->color('gray')
+                        ->width(65),
+    
                     ImageColumn::make('profile_photo_path')
                         ->label('Avatar')
                         ->circular()
                         ->size(45),
-            
-                    TextColumn::make('name')
-                        ->label('Name')
-                        ->sortable()
-                        ->searchable()
-                        ->icon('heroicon-o-user-circle')
-                        ->weight('bold')
-                        ->color('primary'),
-            
-                    TextColumn::make('email')
-                        ->label('Email')
-                        ->icon('heroicon-m-envelope')
-                        ->sortable()
-                        ->searchable(),
-            
-                    TextColumn::make('roles.name')
-                        ->label('Roles')
-                        ->icon('heroicon-o-shield-check')
-                        ->badge()
-                        ->color(fn ($record) => $record->roles->contains('Admin') ? 'danger' : 'success'),
+    
+                    Stack::make([
+                        TextColumn::make('name')
+                            ->label('Name')
+                            ->sortable()
+                            ->searchable()
+                            ->icon('heroicon-o-user-circle')
+                            ->weight('Bold')
+                            ->color('primary'),
+    
+                        TextColumn::make('email')
+                            ->label('Email')
+                            ->icon('heroicon-m-envelope')
+                            ->sortable()
+                            ->searchable(),
+
+                        TextColumn::make('roles.name')
+                            ->label('Roles')
+                            ->icon('heroicon-o-shield-check')
+                            ->badge()
+                            ->color(fn ($record) => $record->roles->contains('Admin') ? 'danger' : 'success'),
+                    ])->grow(),
+    
                 ]),
             ])
             ->filters([
@@ -126,20 +131,29 @@ class UserResource extends Resource {
             ->actions([
                 ViewAction::make(),
                 EditAction::make(),
-
                 Action::make('Set Role')
                     ->icon('heroicon-m-adjustments-vertical')
                     ->form([
                         Select::make('role')
                             ->relationship('roles', 'name')
                             ->multiple()
-                            ->required(),
+                            ->required()
+                            ->preload(),
                     ])
                     ->action(function (User $record, array $data) {
-                        $record->roles()->sync($data['role'] ?? []);
-                    })
-                    ->successNotificationTitle('Roles updated successfully!'),
-
+                        if (!isset($data['role']) || empty($data['role'])) {
+                            Notification::make()
+                                ->title('Please select at least one role!')
+                                ->danger()
+                                ->send();
+                            return;
+                        }
+                        $record->roles()->sync($data['role']);
+                        Notification::make()
+                            ->title('Roles updated successfully!')
+                            ->success()
+                            ->send();
+                    }),
                 DeleteAction::make(),
             ])
             ->bulkActions([
@@ -147,10 +161,9 @@ class UserResource extends Resource {
                     DeleteBulkAction::make(),
                 ]),
             ]);
-    }
+    }    
 
-    public static function getRelations(): array
-    {
+    public static function getRelations(): array {
         return [
             //
         ];

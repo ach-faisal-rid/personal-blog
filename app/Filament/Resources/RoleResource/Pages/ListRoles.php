@@ -21,7 +21,7 @@ class ListRoles extends ListRecords
     protected function getHeaderWidgets(): array
     {
         return [
-            RoleStats::class,
+                RoleStats::class,
         ];
     }
 }
