@@ -11,6 +11,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Actions\EditAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use App\Filament\Resources\RoleResource\Pages;
@@ -41,32 +42,34 @@ class RoleResource extends Resource {
     public static function table(Table $table): Table {
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->label('ID')
-                    ->sortable()
-                    ->searchable()
-                    ->icon('heroicon-o-hashtag')
-                    ->color('gray')
-                    ->toggleable(),
+                Split::make([
+                    TextColumn::make('id')
+                        ->label('ID')
+                        ->sortable()
+                        ->searchable()
+                        ->icon('heroicon-o-hashtag')
+                        ->color('gray')
+                        ->toggleable(),
 
-                TextColumn::make('name')
-                    ->label('Role Name')
-                    ->sortable()
-                    ->searchable()
-                    ->badge()
-                    ->color(fn ($state) => match ($state) {
-                        'super admin' => 'danger',
-                        'user' => 'success',
-                        'editor' => 'warning',
-                        default => 'gray',
-                    })
-                    ->icon(fn ($state) => match ($state) {
-                        'super admin' => 'heroicon-o-shield-check',
-                        'user' => 'heroicon-o-user',
-                        'editor' => 'heroicon-o-pencil',
-                        default => 'heroicon-o-tag',
-                    })
-                    ->tooltip(fn ($state) => "This role is: $state"),
+                    TextColumn::make('name')
+                        ->label('Role Name')
+                        ->sortable()
+                        ->searchable()
+                        ->badge()
+                        ->color(fn ($state) => match ($state) {
+                            'super admin' => 'danger',
+                            'user' => 'success',
+                            'editor' => 'warning',
+                            default => 'gray',
+                        })
+                        ->icon(fn ($state) => match ($state) {
+                            'super admin' => 'heroicon-o-shield-check',
+                            'user' => 'heroicon-o-user',
+                            'editor' => 'heroicon-o-pencil',
+                            default => 'heroicon-o-tag',
+                        })
+                        ->tooltip(fn ($state) => "This role is: $state"),
+                ])
             ])
             ->filters([
                 //

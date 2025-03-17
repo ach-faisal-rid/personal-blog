@@ -25,7 +25,7 @@ const pageUrl = page.url;
                         </Link>
                     </div>
 
-                    <!-- Center Navigation Menu -->
+                    <!-- Center Navigation Menu About, Posts -->
                     <div class="flex items-center space-x-4">
                         <div class="flex space-x-6">
                             <Link
@@ -53,6 +53,20 @@ const pageUrl = page.url;
                             >
                                 Posts
                             </Link>
+                            
+                            <Link
+                                :href="route('thumbnail.index')"
+                                :class="{
+                                    'text-gray-600 dark:text-gray-300': true,
+                                    'text-indigo-500 border-b-2 border-indigo-500':
+                                        pageUrl.includes(route('thumbnail.index')),
+                                    'hover:text-indigo-500 hover:border-indigo-500 transition-all duration-300': true,
+                                }"
+                                class="pb-1 border-b-2 border-transparent"
+                            >
+                                thumbnails
+                            </Link>
+
                         </div>
                     </div>
 

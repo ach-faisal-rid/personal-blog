@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Landing\ThumbnailController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -28,6 +29,11 @@ Route::get('/posts', [PostController::class, 'index'])
     ->name('posts.index');
 Route::get('post/{id}', [PostController::class,'show'])
     ->name('posts.show');
+
+Route::get('/thumbnails', [ThumbnailController::class, 'index'])
+    ->name('thumbnail.index');
+Route::get('/thumbnail/{id}', [ThumbnailController::class, 'show'])
+    ->name('thumbnail.show');
 
 // rute untuk user dashbord
 Route::middleware([
