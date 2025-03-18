@@ -1,9 +1,9 @@
 <script setup>
 import { ref } from "vue";
 import { Head } from "@inertiajs/vue3";
+import { router } from "@inertiajs/vue3";
 import GuestLayout from "@/Layouts/GuestLayout.vue";
 import PostCard from "./PostCard.vue";
-import { router } from "@inertiajs/vue3";
 
 // Data Posts
 defineProps({

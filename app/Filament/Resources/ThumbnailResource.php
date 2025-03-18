@@ -9,9 +9,14 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Get;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -25,12 +30,34 @@ class ThumbnailResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('url')
+                Section::make('Thumbnail Selection')
+                
+                ->schema([
+                
+                Select::make('thumbnail_type')
+                    ->label('Choose Thumbnail Method')
+                    ->options([
+                        'upload' => 'Upload Image',
+                        'url' => 'Use URL',
+                    ])
+                    ->default('upload')
+                    ->reactive(),
+
+                FileUpload::make('image')
+                    ->label('Upload Image')
+                    ->image()
+                    ->directory('thumbnails') // Direktori penyimpanan
+                    ->maxSize(2048) // Maksimal ukuran 2MB
+                    ->hidden(fn (Get $get) => $get('thumbnail_type') !== 'upload'),
+
+                TextInput::make('url')
                     ->label('Thumbnail URL')
                     ->required()
                     ->url() // Validasi sebagai URL
                     ->placeholder('https://example.com/image.jpg')
-                    ->maxLength(255), // Batasi panjang URL
+                    ->maxLength(255)
+                    ->hidden(fn (Get $get) => $get('thumbnail_type') !== 'url'),
+                ])
             ]);
     }
 
@@ -42,9 +69,12 @@ class ThumbnailResource extends Resource
                     ->label('ID')
                     ->sortable()
                     ->searchable()
-                    ->width(50),
+                    ->width(50)
+                    ->icon('heroicon-o-hashtag')
+                    ->color('gray')
+                    ->width(65),
 
-                ImageColumn::make('url')
+                ImageColumn::make('image_url')
                     ->label('Thumbnail Image')
                     ->height(100)
                     ->width(80)
@@ -52,7 +82,13 @@ class ThumbnailResource extends Resource
                     ->searchable()
                     ->extraAttributes([
                         'style' => 'object-fit: cover; border-radius: 2px;'
-                    ]),
+                    ])
+                    ->getStateUsing(fn ($record) => $record->image_url),
+
+                TextColumn::make('thumbnail_type')
+                    ->label('Thumbnail Type')
+                    ->sortable()
+                    ->getStateUsing(fn ($record) => $record->thumbnail_type),
             ])
             ->filters([
                 //

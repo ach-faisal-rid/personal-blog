@@ -14,7 +14,7 @@ export default {
             
             <!-- Thumbnail -->
             <div class="mt-4 relative">
-                <img v-if="thumbnail?.url" :src="thumbnail.url" alt="Thumbnail"
+                <img v-if="thumbnail?.image_url" :src="thumbnail.image_url" alt="Thumbnail"
                     class="w-32 h-auto object-cover rounded-md transition-all duration-500 group-hover:scale-110" />
                 <p v-else class="text-gray-500 dark:text-gray-400 text-sm">Sorry, thumbnail data is not yet available.
                 </p>
