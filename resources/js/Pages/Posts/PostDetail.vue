@@ -21,7 +21,7 @@ export default {
             <div class="mt-4 relative">
                 <img
                     v-if="post.thumbnails.length > 0"
-                    :src="post.thumbnails[0].url"
+                    :src="post.thumbnails[0].image_url"
                     alt="Thumbnail"
                     class="w-full h-auto rounded-md transition-all duration-500"
                 />

@@ -9,6 +9,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\Layout\Split;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Columns\TextColumn;
@@ -16,6 +17,9 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Forms\Get;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -65,6 +69,7 @@ class ThumbnailResource extends Resource
     {
         return $table
             ->columns([
+                Split::make([
                 TextColumn::make('id')
                     ->label('ID')
                     ->sortable()
@@ -75,7 +80,7 @@ class ThumbnailResource extends Resource
                     ->width(65),
 
                 ImageColumn::make('image_url')
-                    ->label('Thumbnail Image')
+                    ->label('Image')
                     ->height(100)
                     ->width(80)
                     ->sortable()
@@ -86,19 +91,20 @@ class ThumbnailResource extends Resource
                     ->getStateUsing(fn ($record) => $record->image_url),
 
                 TextColumn::make('thumbnail_type')
-                    ->label('Thumbnail Type')
+                    ->label('Type')
                     ->sortable()
                     ->getStateUsing(fn ($record) => $record->thumbnail_type),
+                ])
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
