@@ -21,6 +21,7 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Forms\Get;
+use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -70,30 +71,41 @@ class ThumbnailResource extends Resource
         return $table
             ->columns([
                 Split::make([
-                TextColumn::make('id')
-                    ->label('ID')
-                    ->sortable()
-                    ->searchable()
-                    ->width(50)
-                    ->icon('heroicon-o-hashtag')
-                    ->color('gray')
-                    ->width(65),
+                    TextColumn::make('id')
+                        ->label('ID')
+                        ->sortable()
+                        ->searchable()
+                        ->width(50)
+                        ->icon('heroicon-o-hashtag')
+                        ->color('gray')
+                        ->width(65),
 
-                ImageColumn::make('image_url')
-                    ->label('Image')
-                    ->height(100)
-                    ->width(80)
-                    ->sortable()
-                    ->searchable()
-                    ->extraAttributes([
-                        'style' => 'object-fit: cover; border-radius: 2px;'
-                    ])
-                    ->getStateUsing(fn ($record) => $record->image_url),
+                    ImageColumn::make('image_url')
+                        ->label('Image')
+                        ->height(100)
+                        ->width(80)
+                        ->sortable()
+                        ->searchable()
+                        ->extraAttributes([
+                            'style' => 'object-fit: cover; border-radius: 2px;'
+                        ])
+                        ->getStateUsing(fn ($record) => $record->image_url),
 
-                TextColumn::make('thumbnail_type')
-                    ->label('Type')
-                    ->sortable()
-                    ->getStateUsing(fn ($record) => $record->thumbnail_type),
+                    TextColumn::make('thumbnail_type')
+                        ->label('Type')
+                        ->sortable()
+                        ->getStateUsing(fn ($record) => $record->thumbnail_type),
+                    
+                    ToggleColumn::make('status')
+                        ->label('Status')
+                        ->onIcon('heroicon-o-check-circle')
+                        ->offIcon('heroicon-o-x-mark')
+                        ->onColor('success')
+                        ->offColor('danger')
+                        ->afterStateUpdated(fn ($record, $state) => 
+                            $record->update(['status' => $state])
+                        ),
+
                 ])
             ])
             ->filters([

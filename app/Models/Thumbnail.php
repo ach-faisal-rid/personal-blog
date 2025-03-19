@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Thumbnail extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'url', 'image'
+        'url', 'image', 'status'
     ];
 
     protected $appends = ['image_url'];
@@ -25,8 +25,7 @@ class Thumbnail extends Model
     }
 
     // Accessor untuk mendapatkan URL gambar (upload atau URL)
-    public function getImageUrlAttribute()
-    {
+    public function getImageUrlAttribute() {
         if($this->image) {
             return url('storage/' . $this->image);
         }
@@ -35,8 +34,7 @@ class Thumbnail extends Model
     }
 
     // Accessor untuk mengetahui jenis gambar
-    public function getThumbnailTypeAttribute()
-    {
+    public function getThumbnailTypeAttribute() {
         if ($this->image) {
             return 'upload';
         }
@@ -45,4 +43,5 @@ class Thumbnail extends Model
         }
         return 'none';
     }
+
 }

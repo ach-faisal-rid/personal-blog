@@ -11,7 +11,7 @@ class ThumbnailController extends Controller
 {
     // index
     public function index(Request $request) {
-        $query = Thumbnail::query();
+        $query = Thumbnail::where('status', 1); 
 
          // Sorting berdasarkan pilihan user
         if ($request->sort === 'latest') {
