@@ -30,7 +30,7 @@ function fetchPage(url) {
 </script>
 
 <template>
-    <Head title="Thumbnail Index" />
+    <Head title="📷 Thumbnail Index" />
     <GuestLayout>
         <div class="flex flex-col items-center justify-center min-h-screen bg-dots-darker dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
 

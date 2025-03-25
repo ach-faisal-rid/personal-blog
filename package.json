@@ -20,6 +20,8 @@
     "dependencies": {
         "@react-three/drei": "^9.121.5",
         "@react-three/fiber": "^8.17.14",
+        "lucide": "^0.483.0",
+        "lucide-vue-next": "^0.483.0",
         "three": "^0.173.0"
     }
 }

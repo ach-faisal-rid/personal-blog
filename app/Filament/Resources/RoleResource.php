@@ -7,7 +7,10 @@ use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\CheckboxList;
+use Filament\Tables\Columns\TagsColumn;
 use Filament\Tables\Actions\EditAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Actions\DeleteAction;
@@ -32,10 +35,23 @@ class RoleResource extends Resource {
     public static function form(Form $form): Form {
         return $form
             ->schema([
-                    TextInput::make('name')
-                        ->label('Role Name')
-                        ->required()
-                        ->rule('unique:roles,name,' . (request()->route('record') ? request()->route('record') : 'NULL') . ',id'),
+                TextInput::make('name')
+                    ->label('Role Name')
+                    ->unique(ignoreRecord: true)
+                    ->required()
+                    ->maxLength(255),
+                
+                TextInput::make('guard_name')
+                    ->label('Guard Name')
+                    ->default('web')
+                    ->nullable()
+                    ->maxLength(255),
+
+                CheckboxList::make('permissions')
+                    ->label('Permissions')
+                    ->relationship('permissions', 'name')
+                    ->columns(3)
+                    ->searchable(),
             ]);
     }
 
@@ -69,6 +85,17 @@ class RoleResource extends Resource {
                             default => 'heroicon-o-tag',
                         })
                         ->tooltip(fn ($state) => "This role is: $state"),
+
+                    TextColumn::make('guard_name')
+                        ->label('Guard Name')
+                        ->badge()
+                        ->color('warning'),
+
+                    TextColumn::make('permissions_count')
+                        ->label('Permissions')
+                        ->counts('permissions')
+                        ->badge()
+                        ->colors(['success']),
                 ])
             ])
             ->filters([

@@ -35,6 +35,14 @@ Route::get('/thumbnails', [ThumbnailController::class, 'index'])
 Route::get('/thumbnail/{id}', [ThumbnailController::class, 'show'])
     ->name('thumbnail.show');
 
+Route::get('/music', function () {
+    return Inertia::render('Music/Index');
+})->name('music.index');
+
+Route::get('/menu', function() {
+    return Inertia::render('Menu/Index');
+})->name('menu.index');
+
 // rute untuk user dashbord
 Route::middleware([
     'auth:sanctum',

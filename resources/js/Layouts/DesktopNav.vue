@@ -5,7 +5,6 @@ import DropdownLink from "../Components/DropdownLink.vue";
 
 const page = usePage();
 const auth = page.props.auth ?? {};
-const pageUrl = page.url;
 
 const logout = () => {
     router.post(
@@ -24,6 +23,7 @@ const logout = () => {
 <template>
     <div class="flex items-center space-x-6">
 
+         <!-- ketika belum login / registrasi -->
         <template v-if="!auth?.user">
             <Link
                 :href="route('login')"
@@ -40,6 +40,7 @@ const logout = () => {
         </template>
 
         <template v-else>
+            <!-- ketika user terlogin -->
             <Dropdown align="right" width="48">
                 <template #trigger>
                     <button
@@ -53,6 +54,7 @@ const logout = () => {
                         />
                     </button>
                 </template>
+                
                 <template #content>
                     <DropdownLink :href="route('profile.show')"
                         >Profile</DropdownLink
@@ -65,6 +67,7 @@ const logout = () => {
                         <DropdownLink as="button">Log Out</DropdownLink>
                     </form>
                 </template>
+            
             </Dropdown>
         </template>
     </div>
