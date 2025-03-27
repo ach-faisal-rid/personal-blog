@@ -43,6 +43,10 @@ Route::get('/menu', function() {
     return Inertia::render('Menu/Index');
 })->name('menu.index');
 
+Route::get('note', function () {
+    return Inertia::render('Note/Index');
+})->name('note.index');
+
 // rute untuk user dashbord
 Route::middleware([
     'auth:sanctum',

@@ -56,32 +56,6 @@ const pageUrl = page.url;
                             </Link>
                             
                             <Link
-                                :href="route('thumbnail.index')"
-                                :class="{
-                                    'text-gray-600 dark:text-gray-300': true,
-                                    'text-indigo-500 border-b-2 border-indigo-500':
-                                        pageUrl.includes(route('thumbnail.index')),
-                                    'hover:text-indigo-500 hover:border-indigo-500 transition-all duration-300': true,
-                                }"
-                                class="pb-1 border-b-2 border-transparent"
-                            >
-                                thumbnails
-                            </Link>
-                            
-                            <Link
-                                :href="route('music.index')"
-                                :class="{
-                                    'text-gray-600 dark:text-gray-300': true,
-                                    'text-indigo-500 border-b-2 border-indigo-500':
-                                        pageUrl.includes(route('music.index')),
-                                    'hover:text-indigo-500 hover:border-indigo-500 transition-all duration-300': true,
-                                }"
-                                class="pb-1 border-b-2 border-transparent"
-                            >
-                                music
-                            </Link>
-                            
-                            <Link
                                 :href="route('menu.index')"
                                 :class="{
                                     'text-gray-600 dark:text-gray-300': true,
@@ -91,7 +65,7 @@ const pageUrl = page.url;
                                 }"
                                 class="pb-1 border-b-2 border-transparent"
                             >
-                                menu
+                                Menu
                             </Link>
 
                         </div>
