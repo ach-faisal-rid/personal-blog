@@ -184,13 +184,13 @@ const profile = ref({
                     </a>
 
                     <a
-                        href="#"
+                        href="/menu"
                         target="_blank"
                         class="block overflow-hidden transition-transform transform rounded-lg shadow-xl hover:scale-105 hover:shadow-2xl group"
                     >
                         <img
                             src="https://i.pinimg.com/736x/97/00/60/9700602e0a37db9dcbe3cef6948040e5.jpg"
-                            alt="netdown"
+                            alt="FakeNote"
                             class="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-110"
                         />
                         <div
@@ -199,7 +199,7 @@ const profile = ref({
                             <h3
                                 class="text-lg font-bold text-gray-900 dark:text-white"
                             >
-                                netdown
+                                FakeNote
                             </h3>
                             <p class="text-gray-600 dark:text-gray-400">
                                 A Markdown note-taking app

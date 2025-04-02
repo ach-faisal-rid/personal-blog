@@ -3,7 +3,7 @@ website ini masih dalam penbangunan build🏗️.
 ini baru masuk tahap membuat tampilan yang bagus.
 saya pakai laravel 10 📜, jetstream inertia 📦, dan terakhir adalah filament 🧵.
 
-ini masih di tahap. memperbaiki tampilan awal. dan juga masuk ke tahap menambahkan change dark theme.
+`ini masih di tahap. memperbaiki tampilan awal. dan juga masuk ke tahap menambahkan change dark theme.`
 
 untuk menjalankan project ini.
 
@@ -27,7 +27,7 @@ jalankan
 `npm run dev` 
 alasannya karena saya pakai vue dan diperlukan npm kalau ingin menjalankan halamannya.
 
-buka lewat
+buka lewat untuk melihat public page
 `localhost:8000`
 
 buka admin lewat 

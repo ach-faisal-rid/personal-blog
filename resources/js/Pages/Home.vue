@@ -190,12 +190,12 @@ const profile = ref({
                         class="block overflow-hidden transition-transform transform rounded-lg shadow-md hover:scale-105"
                     >
                         <img
-                            :src="thumbnetdown"
-                            alt="netdown"
+                            :src="thumbfakenote"
+                            alt="fakenote"
                             class="w-full h-auto"
                         />
                         <div class="p-4">
-                            <h3 class="text-lg font-bold">netdown</h3>
+                            <h3 class="text-lg font-bold">fakenote</h3>
                             <p>A Markdown note-taking app</p>
                         </div>
                     </a>
