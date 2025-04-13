@@ -34,7 +34,7 @@ class QuizUploadResource extends Resource
 
                 Forms\Components\FileUpload::make('file')
                     ->label('Upload Word (.docx)')
-                    ->disk('local')
+                    ->disk('public')
                     ->directory('quiz-docs')
                     ->acceptedFileTypes([
                         'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx

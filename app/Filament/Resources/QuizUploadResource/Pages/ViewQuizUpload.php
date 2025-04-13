@@ -47,6 +47,8 @@ class ViewQuizUpload extends ViewRecord
                             ->label('Daftar Soal')
                             ->columns(1)
                             ->schema([
+                                ImageEntry::make('image')
+                                    ->url(fn ($record) => $record->image ? asset('temp_extract/' . $record->image) : null),
                                 TextEntry::make('question')->label('Pertanyaan'),
                                 RepeatableEntry::make('options')
                                     ->label('Pilihan Jawaban')
@@ -56,7 +58,9 @@ class ViewQuizUpload extends ViewRecord
                                         TextEntry::make('is_correct')
                                             ->label('Jawaban ?')
                                             ->formatStateUsing(fn (bool $state) => $state ? '✅' : '❌'),
-                                        TextEntry::make('explanation')->label('Penjelasan'),
+                                        TextEntry::make('explanation')
+                                            ->label('Penjelasan: ')
+                                            ->formatStateUsing(fn (bool $state) => $state ? '✅' : '❌'),
                                     ])
                                     ->default(function ($record, $key, $index) {
                                         if (!isset($record['options'][$index])) {

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Services\WordQuizImporter;
+use PhpOffice\PhpWord\Element\Image as PhpWordImage;
 
 class CreateQuizUpload extends CreateRecord
 {
@@ -39,50 +40,72 @@ class CreateQuizUpload extends CreateRecord
         $options = [];
         $answer = null;
         $explanation = null;
+        $questionImage = null;
+        $optionImages = [];
     
         foreach ($phpWord->getSections() as $section) {
             foreach ($section->getElements() as $element) {
-                if (!($element instanceof \PhpOffice\PhpWord\Element\TextRun)) continue;
-    
-                $textLine = '';
-                foreach ($element->getElements() as $textElement) {
-                    if (method_exists($textElement, 'getText')) {
-                        $textLine .= $textElement->getText(); // Collect all text, regardless of formatting
-                    }
-                }
-    
-                $line = trim($textLine);
-                if ($line === '') continue;
-    
-                Log::info("Processing line: " . $line);
-    
-                // Check if the line is a question
-                if (preg_match('/^\d+\.\s*(.+)/', $line, $matches)) {
-                    if ($currentQuestion) {
-                        $currentQuestion['options'] = $options;
-                        $currentQuestion['answer'] = $answer;
-                        $currentQuestion['explanation'] = $explanation; // Store the explanation
-                        $questions[] = $currentQuestion;
+                if ($element instanceof \PhpOffice\PhpWord\Element\TextRun) {
+                    $textLine = '';
+                    foreach ($element->getElements() as $textElement) {
+                        if (method_exists($textElement, 'getText')) {
+                            $textLine .= $textElement->getText(); // Collect all text, regardless of formatting
+                        }
                     }
     
-                    $currentQuestion = [
-                        'question' => $matches[1],
-                        'options' => [],
-                        'answer' => null,
-                        'explanation' => null,
-                    ];
-                    $options = [];
-                    $answer = null;
-                    $explanation = null;
+                    $line = trim($textLine);
+                    if ($line === '') continue;
     
-                } elseif (preg_match('/^([A-E])\.\s*(.+)/', $line, $matches)) {
-                    $options[$matches[1]] = $matches[2];
+                    Log::info("Processing line: " . $line);
     
-                } elseif (preg_match('/^Jawaban\s*[:\-]?\s*([A-E])\.?/i', $line, $matches)) {
-                    $answer = strtoupper(trim($matches[1]));
+                    // Check if the line is a question
+                    if (preg_match('/^\d+\.\s*(.+)/', $line, $matches)) {
+                        if ($currentQuestion) {
+                            $currentQuestion['options'] = $options;
+                            $currentQuestion['answer'] = $answer;
+                            $currentQuestion['explanation'] = $explanation; // Store the explanation
+                            $currentQuestion['image'] = $questionImage; // Store the question image
+                            $questions[] = $currentQuestion;
+                        }
     
-                } elseif (preg_match('/^Penjelasan\s*[:\-]?\s*(.+)/i', $line, $matches)) {
-                    $explanation = trim($matches[1]); // Capture the explanation
+                        $currentQuestion = [
+                            'question' => $matches[1],
+                            'options' => [],
+                            'answer' => null,
+                            'explanation' => null,
+                            'image' => null,
+                        ];
+                        $options = [];
+                        $answer = null;
+                        $explanation = null;
+                        $questionImage = null;
+                        $optionImages = [];
+    
+                    } elseif (preg_match('/^([A-E])\.\s*(.+)/', $line, $matches)) {
+                        $options[$matches[1]] = $matches[2];
+                        $optionImages[$matches[1]] = null;
+    
+                    } elseif (preg_match('/^Jawaban\s*[:\-]?\s*([A-E])\.?/i', $line, $matches)) {
+                        $answer = strtoupper(trim($matches[1]));
+    
+                    } elseif (preg_match('/^Penjelasan\s*[:\-]?\s*(.+)/i', $line, $matches)) {
+                        $explanation = trim($matches[1]); // Capture the explanation
+                    }
+                } elseif ($element instanceof PhpWordImage) {
+                    // Handle image
+                    $imageSrc = $element->getSource(); // Get the source path of the image
+                    if ($currentQuestion && !$questionImage) {
+                        // Save question image
+                        $questionImage = $this->saveImage($imageSrc, 'questions');
+                    } else {
+                        // Save option image
+                        foreach ($options as $key => $option) {
+                            if (!$optionImages[$key]) {
+                                $optionImages[$key] = $this->saveImage($imageSrc, 'options');
+                                break;
+                            }
+                        }
+                    }
                 }
             }
     
@@ -91,6 +114,7 @@ class CreateQuizUpload extends CreateRecord
                 $currentQuestion['options'] = $options;
                 $currentQuestion['answer'] = $answer;
                 $currentQuestion['explanation'] = $explanation;
+                $currentQuestion['image'] = $questionImage;
                 $questions[] = $currentQuestion;
                 $currentQuestion = null;
             }
@@ -104,14 +128,14 @@ class CreateQuizUpload extends CreateRecord
                 $question = Question::create([
                     'quiz_id' => $quizId,
                     'question' => $q['question'],
-                    'image' => null,
+                    'image' => $q['image'],
                 ]);
     
                 foreach ($q['options'] as $key => $text) {
                     Option::create([
                         'question_id' => $question->id,
                         'option_text' => $text,
-                        'option_image' => null,
+                        'option_image' => $optionImages[$key],
                         'is_correct' => $key === $q['answer'],
                         'explanation' => ($key === $q['answer']) ? $q['explanation'] : null, // Explanation only for correct option
                     ]);
@@ -125,6 +149,19 @@ class CreateQuizUpload extends CreateRecord
         }
     
         Log::info("Successfully imported " . count($questions) . " questions into quiz ID: {$quizId}");
+    }
+    
+    protected function saveImage($imagePath, $folder) {
+        $destinationPath = storage_path("app/{$folder}");
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0777, true);
+        }
+    
+        $filename = basename($imagePath);
+        $newImagePath = $destinationPath . '/' . $filename;
+        copy($imagePath, $newImagePath);
+    
+        return $filename;
     }
 
     // protected function afterSave(): void {
