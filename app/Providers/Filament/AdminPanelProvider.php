@@ -2,6 +2,8 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Resources\PostResource\Widgets\PostChart;
+use App\Filament\Resources\PostResource\Widgets\PostWidget;
 use App\Filament\Resources\RoleResource;
 use App\Filament\Resources\UserResource;
 use Filament\Http\Middleware\Authenticate;
@@ -20,6 +22,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Filament\Resources\RoleResource\Widgets\RoleStats;
+use App\Filament\Resources\UserResource\Widgets\UserStats;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -43,6 +46,9 @@ class AdminPanelProvider extends PanelProvider
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
                 RoleStats::class,
+                PostChart::class,
+                PostWidget::class,
+                UserStats::class,
             ])
             ->resources([
                 UserResource::class,

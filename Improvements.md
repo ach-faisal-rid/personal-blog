@@ -1,4 +1,6 @@
-## Apa yang telah diperbarui
+# Apa yang telah diperbarui
+
+## public fitur
 
 ### About  
 ![About](docs/img/About-page.PNG)  
@@ -11,3 +13,6 @@
 ### Menu  
 ![Menu](docs/img/Menu-page.PNG)  
 **Menu** adalah produk yang ingin saya kembangkan serta tempat untuk melakukan berbagai eksperimen.  
+
+## admin fitur
+

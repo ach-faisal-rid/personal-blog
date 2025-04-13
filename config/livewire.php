@@ -65,10 +65,10 @@ return [
 
     'temporary_file_upload' => [
         'disk' => 'local',
-        'rules' => ['required', 'file', 'mimes:jpg,png', 'max:10240'],
+        'rules' => ['required', 'file', 'mimes:jpg,png,doc,docx,pdf', 'max:10240'],
         'directory' => 'uploads/temp',
         'middleware' => 'throttle:30,1',
-        'preview_mimes' => ['png', 'jpg', 'jpeg', 'gif'],
+        'preview_mimes' => ['png', 'jpg', 'jpeg', 'gif', 'doc', 'docx'],
         'max_upload_time' => 10,
         'cleanup' => true,
     ],
