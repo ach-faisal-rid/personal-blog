@@ -1,104 +1,94 @@
 <?php
 
-namespace App\Filament\Resources\QuizUploadResource\Pages;
+namespace App\Services;
 
-use App\Filament\Resources\QuizUploadResource;
 use App\Models\Question;
 use App\Models\Option;
-use Filament\Resources\Pages\CreateRecord;
-use PhpOffice\PhpWord\IOFactory;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
-use App\Services\WordQuizImporter;
+use PhpOffice\PhpWord\IOFactory;
 
-class CreateQuizUpload extends CreateRecord
+class WordQuizImporter
 {
-    protected static string $resource = QuizUploadResource::class;
-
-    protected function afterCreate(): void {
-        $quiz = $this->record;
-        $filePath = $quiz->file; // relative path dari storage/app
-
-        Log::info("Quiz file path: " . $filePath);
-
-        $this->processQuizFromWord($filePath, $quiz->id);
-    }
-
-    protected function processQuizFromWord(string $filePath, int $quizId): void {
+    public function import(string $filePath, int $quizId): void {
         $realPath = storage_path("app/{$filePath}");
-    
+
         if (!file_exists($realPath)) {
             Log::error("File not found: {$realPath}");
             return;
         }
-    
+
         $phpWord = IOFactory::load($realPath);
         $questions = [];
         $currentQuestion = null;
         $options = [];
         $answer = null;
-        $explanation = null;
-    
+        $explanation = null; // inisialisasi di awal
+
         foreach ($phpWord->getSections() as $section) {
             foreach ($section->getElements() as $element) {
                 if (!($element instanceof \PhpOffice\PhpWord\Element\TextRun)) continue;
-    
+
                 $textLine = '';
                 foreach ($element->getElements() as $textElement) {
                     if (method_exists($textElement, 'getText')) {
-                        $textLine .= $textElement->getText(); // Collect all text, regardless of formatting
+                        $textLine .= $textElement->getText();
                     }
                 }
-    
+
                 $line = trim($textLine);
                 if ($line === '') continue;
-    
+
                 Log::info("Processing line: " . $line);
-    
-                // Check if the line is a question
+
                 if (preg_match('/^\d+\.\s*(.+)/', $line, $matches)) {
                     if ($currentQuestion) {
                         $currentQuestion['options'] = $options;
                         $currentQuestion['answer'] = $answer;
-                        $currentQuestion['explanation'] = $explanation; // Store the explanation
+                        $currentQuestion['explanation'] = $explanation;
                         $questions[] = $currentQuestion;
+
+                        // reset variabel
+                        $currentQuestion = null;
+                        $options = [];
+                        $answer = null;
+                        $explanation = null;
                     }
-    
+
                     $currentQuestion = [
                         'question' => $matches[1],
                         'options' => [],
                         'answer' => null,
                         'explanation' => null,
                     ];
-                    $options = [];
-                    $answer = null;
-                    $explanation = null;
-    
-                } elseif (preg_match('/^([A-E])\.\s*(.+)/', $line, $matches)) {
-                    $options[$matches[1]] = $matches[2];
-    
-                } elseif (preg_match('/^Jawaban\s*[:\-]?\s*([A-E])\.?/i', $line, $matches)) {
+
+                } elseif (preg_match('/^([A-Ea-e])\.\s*(.+)/', $line, $matches)) {
+                    $options[strtoupper($matches[1])] = $matches[2];
+
+                } elseif (preg_match('/^Jawaban\s*[:\-]?\s*([A-Ea-e])\.?/i', $line, $matches)) {
                     $answer = strtoupper(trim($matches[1]));
-    
+
                 } elseif (preg_match('/^Penjelasan\s*[:\-]?\s*(.+)/i', $line, $matches)) {
-                    $explanation = trim($matches[1]); // Capture the explanation
+                    $explanation = trim($matches[1] ?? '');
                 }
             }
-    
-            // Add the last question
+
+            // tambahkan soal terakhir
             if ($currentQuestion) {
                 $currentQuestion['options'] = $options;
                 $currentQuestion['answer'] = $answer;
                 $currentQuestion['explanation'] = $explanation;
                 $questions[] = $currentQuestion;
+
+                // reset
                 $currentQuestion = null;
+                $options = [];
+                $answer = null;
+                $explanation = null;
             }
         }
-    
+
         Log::info("Questions parsed: " . json_encode($questions));
-    
-        // Save to database
+
         foreach ($questions as $q) {
             try {
                 $question = Question::create([
@@ -106,34 +96,23 @@ class CreateQuizUpload extends CreateRecord
                     'question' => $q['question'],
                     'image' => null,
                 ]);
-    
+
                 foreach ($q['options'] as $key => $text) {
                     Option::create([
                         'question_id' => $question->id,
                         'option_text' => $text,
                         'option_image' => null,
                         'is_correct' => $key === $q['answer'],
-                        'explanation' => ($key === $q['answer']) ? $q['explanation'] : null, // Explanation only for correct option
+                        'explanation' => $key === $q['answer'] ? $q['explanation'] : null,
                     ]);
                 }
-    
+
                 Log::info("Question created: {$question->id}");
-    
             } catch (\Exception $e) {
                 Log::error('Error saving question and options: ' . $e->getMessage());
             }
         }
-    
+
         Log::info("Successfully imported " . count($questions) . " questions into quiz ID: {$quizId}");
     }
-
-    // protected function afterSave(): void {
-    //     if ($this->record->file_path) {
-    //         app(WordQuizImporter::class)->process(
-    //             $this->record->file_path,
-    //             $this->record->quiz_id
-    //         );
-    //     }
-    // }
-
 }
