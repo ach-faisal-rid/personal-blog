@@ -35,49 +35,51 @@ class CreateQuizUpload extends CreateRecord
         $phpWord = IOFactory::load($realPath);
         $questions = [];
         $currentQuestion = null;
+        $options = [];
+        $answer = null;
     
         foreach ($phpWord->getSections() as $section) {
-            $inQuestionSection = false;
-            $questionText = '';
-            $options = [];
-            $answer = null;
-    
             foreach ($section->getElements() as $element) {
-                if ($element instanceof \PhpOffice\PhpWord\Element\TextRun) {
-                    foreach ($element->getElements() as $textElement) {
-                        if ($textElement instanceof \PhpOffice\PhpWord\Element\Text) {
-                            $line = trim($textElement->getText());
+                if (!($element instanceof \PhpOffice\PhpWord\Element\TextRun)) continue;
     
-                            if ($line === '') continue;
-    
-                            Log::info("Processing line: " . $line);
-    
-                            // Check if the line is a question
-                            if (preg_match('/^\d+\.\s*(.+)/', $line, $matches)) {
-                                if ($currentQuestion !== null) {
-                                    // Save the previous question
-                                    $questions[] = $currentQuestion;
-                                }
-                                $currentQuestion = [
-                                    'question' => $matches[1],
-                                    'options' => [],
-                                    'answer' => null,
-                                ];
-                                $inQuestionSection = true;
-                                $questionText = $matches[1];
-                            } elseif (preg_match('/^([A-E])\.\s*(.+)/', $line, $matches) && $inQuestionSection) {
-                                $options[$matches[1]] = $matches[2];
-                            } elseif (preg_match('/^Jawaban\s*[:\-]?\s*([A-E])\.?/i', $line, $matches) && $inQuestionSection) {
-                                $answer = strtoupper($matches[1]);
-                                $inQuestionSection = false; // End of question section
-                            }
-                        }
+                $textLine = '';
+                foreach ($element->getElements() as $textElement) {
+                    if (method_exists($textElement, 'getText')) {
+                        $textLine .= $textElement->getText(); // Ambil semua teks, tidak peduli format
                     }
+                }
+    
+                $line = trim($textLine);
+                if ($line === '') continue;
+    
+                Log::info("Processing line: " . $line);
+    
+                // Cek apakah baris adalah soal
+                if (preg_match('/^\d+\.\s*(.+)/', $line, $matches)) {
+                    if ($currentQuestion) {
+                        $currentQuestion['options'] = $options;
+                        $currentQuestion['answer'] = $answer;
+                        $questions[] = $currentQuestion;
+                    }
+    
+                    $currentQuestion = [
+                        'question' => $matches[1],
+                        'options' => [],
+                        'answer' => null,
+                    ];
+                    $options = [];
+                    $answer = null;
+    
+                } elseif (preg_match('/^([A-E])\.\s*(.+)/', $line, $matches)) {
+                    $options[$matches[1]] = $matches[2];
+    
+                } elseif (preg_match('/^Jawaban\s*[:\-]?\s*([A-E])\.?/i', $line, $matches)) {
+                    $answer = strtoupper(trim($matches[1]));
                 }
             }
     
-            // Check if there's a question at the end of the section
-            if ($inQuestionSection && $currentQuestion !== null) {
+            // Tambahkan pertanyaan terakhir
+            if ($currentQuestion) {
                 $currentQuestion['options'] = $options;
                 $currentQuestion['answer'] = $answer;
                 $questions[] = $currentQuestion;
@@ -87,6 +89,7 @@ class CreateQuizUpload extends CreateRecord
     
         Log::info("Questions parsed: " . json_encode($questions));
     
+        // Simpan ke database
         foreach ($questions as $q) {
             try {
                 $question = Question::create([
@@ -95,25 +98,24 @@ class CreateQuizUpload extends CreateRecord
                     'image' => null,
                 ]);
     
-                Log::info("Question created with ID: " . $question->id);
-    
                 foreach ($q['options'] as $key => $text) {
-                    $option = Option::create([
+                    Option::create([
                         'question_id' => $question->id,
                         'option_text' => $text,
                         'option_image' => null,
                         'is_correct' => $key === $q['answer'],
                         'explanation' => null,
                     ]);
-    
-                    Log::info("Option created with ID: " . $option->id);
                 }
+    
+                Log::info("Question created: {$question->id}");
+    
             } catch (\Exception $e) {
                 Log::error('Error saving question and options: ' . $e->getMessage());
             }
         }
     
         Log::info("Successfully imported " . count($questions) . " questions into quiz ID: {$quizId}");
-    }
+    }    
 
 }
