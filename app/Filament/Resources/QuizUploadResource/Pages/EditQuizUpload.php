@@ -16,4 +16,13 @@ class EditQuizUpload extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    // protected function afterSave(): void {
+    //         if ($this->record->file_path) {
+    //             app(WordQuizImporter::class)->process(
+    //                 $this->record->file_path,
+    //                 $this->record->quiz_id
+    //             );
+    //         }
+    //     }
 }

@@ -26,7 +26,7 @@ class Quiz extends Model
         static::deleting(function ($quiz) {
             // Delete the associated file from storage
             if ($quiz->file) {
-                Storage::disk('local')->delete($quiz->file);
+                Storage::disk('public')->delete($quiz->file);
             }
         });
     }
@@ -38,7 +38,21 @@ class Quiz extends Model
 
     public function storeFile($file)
     {
-        $directory = 'quiz-docs';
+        // Define allowed file types and size limit
+        $allowedMimeTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        $maxFileSize = 2048 * 1024; // 2MB in bytes
+
+        // Validate file type
+        if (!in_array($file->getMimeType(), $allowedMimeTypes)) {
+            throw new \InvalidArgumentException('Invalid file type. Allowed types: ' . implode(', ', $allowedMimeTypes));
+        }
+
+        // Validate file size
+        if ($file->getSize() > $maxFileSize) {
+            throw new \InvalidArgumentException('File size exceeds the maximum allowed size of ' . ($maxFileSize / 1024 / 1024) . 'MB');
+        }
+
+        $directory = 'quiz-word';
         $filename = Str::random(40) . '.' . $file->getClientOriginalExtension();
         $path = $directory . '/' . $filename;
 

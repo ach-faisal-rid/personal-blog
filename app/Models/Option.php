@@ -33,12 +33,27 @@ class Option extends Model
         });
     }
 
-    public function question(){
+    public function question()
+    {
         return $this->belongsTo(Question::class);
     }
 
     public function storeImage($image)
     {
+        // Define allowed image types and size limit
+        $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $maxFileSize = 2048 * 1024; // 2MB in bytes
+
+        // Validate image type
+        if (!in_array($image->getMimeType(), $allowedMimeTypes)) {
+            throw new \InvalidArgumentException('Invalid image type. Allowed types: ' . implode(', ', $allowedMimeTypes));
+        }
+
+        // Validate image size
+        if ($image->getSize() > $maxFileSize) {
+            throw new \InvalidArgumentException('Image size exceeds the maximum allowed size of ' . ($maxFileSize / 1024 / 1024) . 'MB');
+        }
+
         $directory = 'options/images';
         $filename = Str::random(40) . '.' . $image->getClientOriginalExtension();
         $path = $directory . '/' . $filename;

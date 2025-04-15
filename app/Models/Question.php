@@ -19,16 +19,32 @@ class Question extends Model
         'image',
     ];
 
-    public function quiz(){
+    public function quiz()
+    {
         return $this->belongsTo(Quiz::class);
     }
 
-    public function options(){
+    public function options()
+    {
         return $this->hasMany(Option::class);
     }
 
     public function storeImage($image)
     {
+        // Define allowed image types and size limit
+        $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $maxFileSize = 2048 * 1024; // 2MB in bytes
+
+        // Validate image type
+        if (!in_array($image->getMimeType(), $allowedMimeTypes)) {
+            throw new \InvalidArgumentException('Invalid image type. Allowed types: ' . implode(', ', $allowedMimeTypes));
+        }
+
+        // Validate image size
+        if ($image->getSize() > $maxFileSize) {
+            throw new \InvalidArgumentException('Image size exceeds the maximum allowed size of ' . ($maxFileSize / 1024 / 1024) . 'MB');
+        }
+
         $directory = 'questions/image';
         $filename = Str::random(40) . '.' . $image->getClientOriginalExtension();
         $path = $directory . '/' . $filename;
