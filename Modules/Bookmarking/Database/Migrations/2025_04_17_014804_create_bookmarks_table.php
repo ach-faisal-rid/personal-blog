@@ -1,5 +1,7 @@
 <?php
 
+namespace Modules\Bookmarking\Database\Migrations;
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,10 +13,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bookmark_collection', function (Blueprint $table) {
+        Schema::create('bookmarks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('bookmark_id')->constrained()->onDelete('cascade');
-            $table->foreignId('collection_id')->constrained()->onDelete('cascade');
+            $table->foreignId('role_user_id')->constrained('role_users')->onDelete('cascade');
+            $table->string('url');
+            $table->string('title')->nullable(); // akan diambil otomatis
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
@@ -24,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bookmark_collection');
+        Schema::dropIfExists('bookmarks');
     }
 };
