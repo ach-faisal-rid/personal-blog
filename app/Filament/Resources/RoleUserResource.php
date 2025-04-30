@@ -49,7 +49,10 @@ class RoleUserResource extends Resource
                 TextColumn::make('id')
                     ->label('ID')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->icon('heroicon-o-hashtag')
+                    ->color('gray')
+                    ->toggleable(),
 
                 TextColumn::make('user.name')
                     ->label('User')
@@ -62,12 +65,19 @@ class RoleUserResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->badge(),
+
+                TextColumn::make('user_count')
+                    ->label('user counts')
+                    ->counts('user')
+                    ->badge()
+                    ->colors(['success']),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

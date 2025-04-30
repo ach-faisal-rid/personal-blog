@@ -24,26 +24,36 @@ class RoleUser extends Pivot
 
     public function role()
     {
-        return $this->belongsTo(Role::class, 'role_id', 'id');
+        return $this->belongsTo(Role::class, 
+        'role_id', 
+        'id');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(User::class, 
+        'user_id', 
+        'id');
     }
 
     public function postUsers()
     {
-        return $this->hasMany(PostUser::class, 'role_user_id', 'id');
+        return $this->hasMany(PostUser::class, 
+        'role_user_id', 
+        'id');
     }
 
     public function bookmarks()
     {
-        return $this->hasMany(Bookmark::class, 'role_user_id', 'id');
+        return $this->hasMany(Bookmark::class, 
+        'role_user_id', 
+        'id');
     }
 
     public function collections()
     {
-        return $this->hasMany(Collection::class, 'role_user_id', 'id');
+        return $this->hasMany(Collection::class, 
+        'role_user_id', 
+        'id');
     }
 }
