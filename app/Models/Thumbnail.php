@@ -15,6 +15,7 @@ class Thumbnail extends Model
 
     protected $appends = ['image_url'];
 
+    // relasi ke posts
     public function posts()
     {
         return $this->belongsToMany(Post::class, 
