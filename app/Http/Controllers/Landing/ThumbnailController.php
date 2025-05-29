@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Landing;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Thumbnail;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Modules\ContentManagement\Entities\Thumbnail;
 
 class ThumbnailController extends Controller
 {

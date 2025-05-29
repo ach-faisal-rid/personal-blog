@@ -4,10 +4,12 @@ namespace App\Filament\Resources;
 
 use Filament\Forms;
 use App\Models\User;
-use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Filament\Facades\Filament;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
 use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
@@ -20,17 +22,16 @@ use Filament\Notifications\Notification;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
-use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use App\Filament\Resources\UserResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\UserResource\RelationManagers;
 use App\Filament\Resources\UserResource\Widgets\UserStats;
+use BezhanSalleh\FilamentShield\FilamentShield;
 
-class UserResource extends Resource {
+class UserResource extends Resource
+{
     protected static ?string $model = User::class;
     protected static ?string $navigationGroup = 'User Management';
     protected static ?string $navigationIcon = 'heroicon-o-user';
@@ -42,47 +43,53 @@ class UserResource extends Resource {
         ];
     }
 
-    public static function form(Form $form): Form {
+    public static function form(Form $form): Form
+    {
         return $form
             ->schema([
                 Section::make('User Information')
-                ->schema([
-                    TextInput::make('name')
-                        ->label('Name')
-                        ->required(),
-    
-                    TextInput::make('email')->label('Email')
-                        ->email()
-                        ->required(),
-    
-                    TextInput::make('password')
-                        ->label('Password')
-                        ->password()
-                        ->minLength(6)
-                        ->maxLength(length: 12)
-                        ->visible(fn($record) => !$record),
-    
-                    Select::make('roles')
-                        ->label('Roles')
-                        ->relationship('roles', 'name')
-                        ->preload(),
+                    ->schema([
+                        TextInput::make('name')
+                            ->label('Name')
+                            ->required(),
 
-                ])->columns(2),
-                Section::make('Profile Picture')
-                ->schema([
-                    
-                    FileUpload::make('profile_photo_path')
-                        ->label('Avatar')
-                        ->image()
-                        ->directory('profile-photos')
-                        ->maxSize(2048)
-                        ->columnSpanFull(),
+                        TextInput::make('email')->label('Email')
+                            ->email()
+                            ->required(),
+
+                        TextInput::make('password')
+                            ->label('Password')
+                            ->password()
+                            ->minLength(6)
+                            ->maxLength(length: 12)
+                            ->visible(fn($record) => !$record),
+
+                    ])->columns(2),
                 
-                ])->columns(1),
+                Section::make('Roles')
+                    ->schema([
+                        Select::make('roles')
+                            ->label('Roles')
+                            ->relationship('roles', 'name')
+                            ->multiple()
+                            ->preload()
+                            ->searchable(),
+                    ])->columns(1),
+                
+                Section::make('Profile Picture')
+                    ->schema([
+                        FileUpload::make('profile_photo_path')
+                            ->label('Avatar')
+                            ->image()
+                            ->directory('profile-photos')
+                            ->maxSize(2048)
+                            ->columnSpanFull(),
+                    ])->columns(1),
             ]);
     }
 
-    public static function table(Table $table): Table {
+    public static function table(Table $table): Table
+    {
         return $table
             ->columns([
                 Split::make([
@@ -93,12 +100,12 @@ class UserResource extends Resource {
                         ->icon('heroicon-o-hashtag')
                         ->color('gray')
                         ->width(65),
-    
+
                     ImageColumn::make('profile_photo_path')
                         ->label('Avatar')
                         ->circular()
                         ->size(45),
-    
+
                     Stack::make([
                         TextColumn::make('name')
                             ->label('Name')
@@ -107,53 +114,35 @@ class UserResource extends Resource {
                             ->icon('heroicon-o-user-circle')
                             ->weight('Bold')
                             ->color('primary'),
-    
+
                         TextColumn::make('email')
                             ->label('Email')
                             ->icon('heroicon-m-envelope')
                             ->sortable()
                             ->searchable(),
-
+                            
                         TextColumn::make('roles.name')
                             ->label('Roles')
-                            ->icon('heroicon-o-shield-check')
                             ->badge()
-                            ->color(fn ($record) => $record->roles->contains('Admin') ? 'danger' : 'success'),
+                            ->color('success'),
                     ])->grow(),
-    
+
+                    TextColumn::make('created_at')
+                        ->label('created')
+                        ->dateTime()
+                        ->sortable(),
                 ]),
             ])
             ->filters([
                 SelectFilter::make('roles')
-                    ->label('Filter by Role')
-                    ->relationship('roles', 'name'),
+                    ->relationship('roles', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->searchable(),
             ])
             ->actions([
                 ViewAction::make(),
                 EditAction::make(),
-                Action::make('Set Role')
-                    ->icon('heroicon-m-adjustments-vertical')
-                    ->form([
-                        Select::make('role')
-                            ->relationship('roles', 'name')
-                            ->multiple()
-                            ->required()
-                            ->preload(),
-                    ])
-                    ->action(function (User $record, array $data) {
-                        if (!isset($data['role']) || empty($data['role'])) {
-                            Notification::make()
-                                ->title('Please select at least one role!')
-                                ->danger()
-                                ->send();
-                            return;
-                        }
-                        $record->roles()->sync($data['role']);
-                        Notification::make()
-                            ->title('Roles updated successfully!')
-                            ->success()
-                            ->send();
-                    }),
                 DeleteAction::make(),
             ])
             ->bulkActions([
@@ -161,9 +150,10 @@ class UserResource extends Resource {
                     DeleteBulkAction::make(),
                 ]),
             ]);
-    }    
+    }
 
-    public static function getRelations(): array {
+    public static function getRelations(): array
+    {
         return [
             //
         ];

@@ -2,20 +2,27 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PostResource\Pages;
-use App\Filament\Resources\PostResource\RelationManagers;
-use App\Models\Post;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Forms\Set;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
-use Filament\Forms\Components\TextInput;
+use Illuminate\Support\Str;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Hidden;
+use Filament\Resources\Resource;
 use Filament\Forms\Components\Textarea;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\ImageColumn;
 use Illuminate\Database\Eloquent\Builder;
+use Modules\ContentManagement\Entities\Post;
+use App\Filament\Resources\PostResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\PostResource\RelationManagers;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
+use Modules\ContentManagement\Entities\Thumbnail;
 
 class PostResource extends Resource
 {
@@ -27,18 +34,79 @@ class PostResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('title')
-                    ->label('Title')
-                    ->required(),
+                Section::make('Post Information')
+                    ->description('Informasi dasar untuk post ini.')
+                    ->schema([
+                        TextInput::make('title')
+                            ->label('Title')
+                            ->placeholder('Judul artikel...')
+                            ->required()
+                            ->reactive()
+                            ->afterStateUpdated(function (Set $set, $state) {
+                                $set('slug', Str::slug($state));
+                            }),
 
-                Textarea::make('description')
-                    ->label('Description')
-                    ->required(),
+                        TextInput::make('slug')
+                            ->label('Slug')
+                            ->required()
+                            ->placeholder('slug-otomatis-dari-judul'),
 
-                TextInput::make('youtube_url')
-                    ->label('YouTube URL')
-                    ->url()
-                    ->required(),
+                        Textarea::make('description')
+                            ->label('Description')
+                            ->required()
+                            ->rows(4),
+                    ])
+                    ->columns(2),
+
+                Section::make('Metadata')
+                    ->schema([
+                        TextInput::make('social_url')
+                            ->label('Social URL')
+                            ->url()
+                            ->required()
+                            ->placeholder('https://twitter.com/post'),
+
+                        DateTimePicker::make('published_at')
+                            ->label('Publish Date')
+                            ->required(),
+                    ])
+                    ->columns(2),
+
+                Section::make('Relational Info')
+                    ->schema([
+                        Select::make('category_id')
+                            ->label('Category')
+                            ->relationship('category', 'name')
+                            ->searchable()
+                            ->required(),
+
+                        Select::make('user_id')
+                            ->label('Author')
+                            ->relationship('author', 'name')
+                            ->searchable()
+                            ->required(),
+
+                        Select::make('thumbnail_id')
+                            ->label('Thumbnail')
+                            ->relationship('thumbnail', 'id')
+                            ->searchable()
+                            ->required()
+                    ])
+                    ->columns(3),
+
+                Section::make('Publishing')
+                    ->schema([
+                        Select::make('status')
+                            ->label('Status')
+                            ->options([
+                                'draft' => 'Draft',
+                                'published' => 'Published',
+                                'archived' => 'Archived',
+                            ])
+                            ->default('draft')
+                            ->required()
+                            ->helperText('Pilih status untuk publikasi.'),
+                    ]),
             ]);
     }
 
@@ -46,6 +114,21 @@ class PostResource extends Resource
     {
         return $table
             ->columns([
+
+                TextColumn::make('id')
+                        ->label('ID')
+                        ->sortable()
+                        ->searchable()
+                        ->icon('heroicon-o-hashtag')
+                        ->color('gray')
+                        ->width(65),
+
+                ImageColumn::make('thumbnail_url')
+                    ->label('Thumbnail')
+                    ->getStateUsing(fn($record) => $record->thumbnail->image_url ?? null)
+                    ->size(100)
+                    ->square(),
+
                 TextColumn::make('id')
                     ->label('ID')
                     ->sortable()
@@ -57,54 +140,28 @@ class PostResource extends Resource
                     ->searchable()
                     ->limit(30),
 
-                ImageColumn::make('thumbnail_url')
-                    ->label('Thumbnail')
-                    ->getStateUsing(fn 
-                        ($record) => 
-                        $record->thumbnails->pluck('url')->first() ?? null)
-                    ->size(100)
-                    ->square(),
-
-                TextColumn::make('categories.name')
+                TextColumn::make('category.name')
                     ->label('Category')
                     ->sortable()
                     ->searchable()
                     ->badge(),
 
-                TextColumn::make('authors.name')
+                TextColumn::make('author.name')
                     ->label('Author')
                     ->sortable()
                     ->searchable()
                     ->badge(),
-                    
-                TextColumn::make('youtube_url')
-                    ->label('YouTube Link')
+
+                TextColumn::make('social_url')
+                    ->label('Social Link')
                     ->sortable()
                     ->searchable()
-                    ->getStateUsing(function ($record) {
-                        $url = $record->youtube_url;
-                        $shortenedUrl = substr($url, 0, 30); // Ambil 30 karakter pertama dari URL
-                        $icon = '';
-                
-                        // Cek platform sosial media dan pilih ikon yang sesuai
-                        if (preg_match('/youtube\.com|youtu\.be/', $url)) {
-                            $icon = '<x-heroicon-o-video-camera class="w-5 h-5 text-red-600" />';
-                        } elseif (preg_match('/tiktok\.com/', $url)) {
-                            $icon = '<x-heroicon-o-play class="w-5 h-5 text-black" />';
-                        } elseif (preg_match('/instagram\.com/', $url)) {
-                            $icon = '<x-heroicon-o-camera class="w-5 h-5 text-pink-600" />';
-                        }
-                
-                        // Menampilkan ikon dan URL yang dipersingkat
-                        if ($icon) {
-                            return "<a href='{$url}' target='_blank'>{$icon} {$shortenedUrl}...</a>";
-                        }
-                
-                        // Jika tidak ada ikon, hanya menampilkan URL yang dipersingkat
-                        return "<a href='{$url}' target='_blank'>{$shortenedUrl}...</a>";
-                    })
-                    ->html(),
+                    ->formatStateUsing(fn ($state) => Str::limit($state, 30))
+                    ->url(fn ($record) => $record->social_url, true, )
+                    ->html()
+                    ->extraAttributes(['class' => 'w-64']),
             ])
+
             ->filters([
                 //
             ])

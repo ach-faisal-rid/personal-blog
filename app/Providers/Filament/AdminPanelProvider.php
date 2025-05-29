@@ -2,18 +2,18 @@
 
 namespace App\Providers\Filament;
 
+use Filament\Panel;
+use Filament\Pages;
+use Filament\Widgets;
+use Filament\PanelProvider;
+use Filament\Support\Colors\Color;
 use App\Filament\Resources\PostResource\Widgets\PostChart;
 use App\Filament\Resources\PostResource\Widgets\PostWidget;
-use App\Filament\Resources\RoleResource;
-use App\Filament\Resources\UserResource;
+use App\Filament\Resources\UserResource\Widgets\UserStats;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages;
-use Filament\Panel;
-use Filament\PanelProvider;
-use Filament\Support\Colors\Color;
-use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -21,8 +21,6 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use App\Filament\Resources\RoleResource\Widgets\RoleStats;
-use App\Filament\Resources\UserResource\Widgets\UserStats;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -34,7 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->colors([
-                'primary' => Color::Rose,
+                'primary' => Color::Blue,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
@@ -43,16 +41,11 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
-                RoleStats::class,
-                PostChart::class,
+                // Widgets\AccountWidget::class,
+                // Widgets\FilamentInfoWidget::class,
                 PostWidget::class,
                 UserStats::class,
-            ])
-            ->resources([
-                UserResource::class,
-                RoleResource::class,
+                PostChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -67,6 +60,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            ->plugins([
+                FilamentShieldPlugin::make(),
             ]);
     }
 }

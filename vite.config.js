@@ -1,18 +1,23 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
+import path from 'path';
 
 export default defineConfig({
+    server: {
+        host: 'localhost', // hindari [::1]
+        port: 5173,
+        cors: true, // fix CORS error
+    },
+    resolve: {
+        alias: {
+            '@': path.resolve(__dirname, 'resources/js'), // perbaikan path
+        },
+    },
     build: {
-        resolve: {
-            alias: {
-              '@': '/resources/js',
-            },
-          },
-        chunkSizeWarningLimit: 1500, // Sesuaikan batas ukuran chunk jika besar
+        chunkSizeWarningLimit: 1500,
     },
     plugins: [
-        
         vue({
             template: {
                 transformAssetUrls: {
@@ -24,7 +29,7 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/js/app.js',
-                'resources/css/app.css'
+                'resources/css/app.css',
             ],
             refresh: true,
         }),

@@ -2,21 +2,21 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CategoryResource\Pages;
-use App\Filament\Resources\CategoryResource\RelationManagers;
-use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Models\Category;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
 use Illuminate\Support\Str;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Forms\Components\TextInput;
+use Illuminate\Database\Eloquent\Builder;
+use Modules\ContentManagement\Entities\Category;
+use App\Filament\Resources\CategoryResource\Pages;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\CategoryResource\RelationManagers;
 
 class CategoryResource extends Resource
 {
@@ -58,10 +58,14 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
+                
                 TextColumn::make('id')
-                    ->label('ID')
-                    ->sortable()
-                    ->searchable(),
+                        ->label('ID')
+                        ->sortable()
+                        ->searchable()
+                        ->icon('heroicon-o-hashtag')
+                        ->color('gray')
+                        ->width(65),
 
                 IconColumn::make('icon')
                     ->label('Icon')

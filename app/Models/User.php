@@ -3,22 +3,26 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Sanctum\HasApiTokens;
+use Laravel\Jetstream\HasProfilePhoto;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
-use Laravel\Jetstream\HasProfilePhoto;
-use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Filament\Models\Contracts\FilamentUser;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable
 {
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
+    use HasRoles;
+    use SoftDeletes;
 
     protected $table = "users";
     /**
@@ -84,29 +88,5 @@ class User extends Authenticatable implements FilamentUser
             // password akan dienkripsi sebelum disimpan
             set: fn ($value) => bcrypt($value), 
         );
-    }
-
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class, 
-        'role_users', 'user_id', 'role_id'
-        )->using(RoleUser::class)->withTimestamps();
-    }
-
-    public function hasRole($roleName): bool
-    {
-        return $this->roles()->whereRaw('LOWER(name) = ?', 
-        [strtolower($roleName)])->exists();
-    }
-
-    /**
-     * Tentukan apakah pengguna dapat mengakses Filament 
-     * hanya bisa dibukan oleh admin atau super admin dari role-user.
-     */
-    public function canAccessPanel(\Filament\Panel $panel): bool
-    {
-        return $this->roles()->whereIn('name', 
-        ['admin', 'super admin']
-        )->exists();
     }
 }

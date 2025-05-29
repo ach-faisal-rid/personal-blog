@@ -3,8 +3,8 @@
 namespace App\Filament\Resources\PostResource\Widgets;
 
 use Filament\Widgets\ChartWidget;
-use App\Models\Post;
 use Illuminate\Support\Facades\DB;
+use Modules\ContentManagement\Entities\Post;
 
 class PostChart extends ChartWidget
 {

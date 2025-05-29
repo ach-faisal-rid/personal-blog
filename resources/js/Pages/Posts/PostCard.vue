@@ -23,8 +23,8 @@ export default {
             <!-- Thumbnail -->
             <div class="mt-4 relative">
                 <img
-                    v-if="post.thumbnails.length > 0"
-                    :src="post.thumbnails[0].image_url"
+                    v-if="post.thumbnail"
+                    :src="post.thumbnail.image_url"
                     alt="Thumbnail"
                     class="w-32 h-auto object-cover rounded-md transition-all duration-500 group-hover:scale-110"
                 />
@@ -38,26 +38,18 @@ export default {
 
             <div class="mt-4 flex justify-between space-x-4">
                 <!-- Categories -->
-                <div v-if="post.categories.length > 0" class="mt-4">
-                    <strong class="text-gray-700 dark:text-gray-300">Categories:</strong>
-                    <ul class="pl-5 text-gray-600 dark:text-gray-400 list-none">
-                        <li v-for="category in post.categories" :key="category.id">
-                            {{ category.name }}
-                        </li>
-                    </ul>
+                <div v-if="post.category" class="mt-4">
+                    <strong class="text-gray-700 dark:text-gray-300">Category:</strong>
+                    <p class="text-gray-600 dark:text-gray-400">{{ post.category.name }}</p>
                 </div>
                 <div v-else class="mt-4">
                     <p class="text-sm text-gray-500 dark:text-gray-400">Sorry, category data is not yet available.</p>
                 </div>
     
                 <!-- Authors -->
-                <div v-if="post.authors.length > 0" class="mt-4">
-                    <strong class="text-gray-700 dark:text-gray-300">Authors:</strong>
-                    <ul class="pl-5 text-gray-600 dark:text-gray-400 list-none">
-                        <li v-for="author in post.authors" :key="author.id">
-                            {{ author.name }}
-                        </li>
-                    </ul>
+                <div v-if="post.author" class="mt-4">
+                    <strong class="text-gray-700 dark:text-gray-300">Author:</strong>
+                    <p class="text-gray-600 dark:text-gray-400">{{ post.author.name }}</p>
                 </div>
                 <div v-else class="mt-4">
                     <p class="text-sm text-gray-500 dark:text-gray-400">Sorry, author data is not yet available.</p>

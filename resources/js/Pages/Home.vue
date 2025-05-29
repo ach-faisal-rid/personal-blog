@@ -55,7 +55,7 @@ const profile = ref({
         {
             name : "youtube",
             url : "https://www.youtube.com/@ach-faisal-rid",
-            image : "http://localhost:8000/storage/profile-photos/I6Z64RINAoOh1F64oAkI1Epx4CRcrbfToLBH7eM7.png",
+            image : "http://personal-blog.test/storage/profile-photos/I6Z64RINAoOh1F64oAkI1Epx4CRcrbfToLBH7eM7.png",
         }
     ]
 });
@@ -93,7 +93,7 @@ const profile = ref({
                 </div>
                 <div class="mt-4 md:mt-0">
                     <img
-                        src="http://localhost:8000/storage/profile-photos/UYZQQzqQbAR5CYlId1YLNeLWmdlGrEtbHZ3YIWd5.jpg"
+                        src="http://personal-blog.test/storage/profile-photos/UYZQQzqQbAR5CYlId1YLNeLWmdlGrEtbHZ3YIWd5.jpg"
                         alt="Profile image"
                         class="w-24 h-24 border-2 border-gray-300 rounded-full"
                     />
@@ -163,7 +163,7 @@ const profile = ref({
                 </div>
             </div>
 
-            <!--  -->
+            <!-- grid links -->
             <div class="px-4 mx-auto max-w-7xl">
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <a

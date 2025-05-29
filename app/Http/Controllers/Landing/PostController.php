@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Landing;
 
-use App\Http\Controllers\Controller;
-use App\Models\Post;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Modules\ContentManagement\Entities\Post;
 
 class PostController extends Controller
 {
@@ -15,7 +15,7 @@ class PostController extends Controller
         $sort = $request->input('sort', 'latest'); // Default ke 'latest' jika tidak dipilih
 
         // Query dengan filter dan sorting
-        $posts = Post::with(['thumbnails', 'categories', 'authors'])
+        $posts = Post::with(['thumbnail', 'category', 'author'])
         ->when($search, function ($query, $search) {
             return $query->where('title', 'like', "%{$search}%");
         })
@@ -32,13 +32,15 @@ class PostController extends Controller
     }
 
     // show
-    public function show($id) {
-        $post = Post::findOrFail($id);
+    public function show($id)
+    {
+        $post = Post::with([
+            'category', 'author', 'thumbnail'
+        ])->findOrFail($id);
+
         return Inertia::render('Posts/Show', [
-            'post' => $post->load(
-                ['thumbnails', 'categories', 
-                            'authors', 'comments.postUser.user']
-            ),  // Load relations
+            'post' => $post,
         ]);
     }
+
 }

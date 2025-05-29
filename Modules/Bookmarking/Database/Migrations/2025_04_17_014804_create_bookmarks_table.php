@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('bookmarks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('role_user_id')->constrained('role_users')->onDelete('cascade');
             $table->string('url');
             $table->string('title')->nullable(); // akan diambil otomatis
             $table->text('description')->nullable();

@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources\ThumbnailResource\Widgets;
 
-use App\Models\Thumbnail;
 use Filament\Support\Enums\IconPosition;
-use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Modules\ContentManagement\Entities\Thumbnail;
+use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 
 class ThumbStats extends BaseWidget
 {

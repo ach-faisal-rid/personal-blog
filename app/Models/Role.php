@@ -11,14 +11,7 @@ class Role extends Model
     protected $table = "roles";
     protected $fillable = [
         'name',
-        'guard_name'
+        'guard_name',
+        'desc'
     ];
-
-    public function users() {
-        return $this->belongsToMany(User::class, 'role_users', 'role_id', 'user_id')->using(RoleUser::class)->withTimestamps();
-    }
-
-    public function permissions() {
-        return $this->belongsToMany(Permission::class, 'permission_role');
-    }
 }

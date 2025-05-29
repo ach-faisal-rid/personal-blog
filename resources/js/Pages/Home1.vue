@@ -84,7 +84,7 @@ const profile = ref({
                 </div>
                 <div class="mt-4 md:mt-0">
                     <img
-                        src="http://localhost:8000/storage/profile-photos/UYZQQzqQbAR5CYlId1YLNeLWmdlGrEtbHZ3YIWd5.jpg"
+                        src="http://personal-blog.test/storage/profile-photos/UYZQQzqQbAR5CYlId1YLNeLWmdlGrEtbHZ3YIWd5.jpg"
                         alt="Profile image"
                         class="w-24 h-24 border-2 border-gray-300 rounded-full"
                     />

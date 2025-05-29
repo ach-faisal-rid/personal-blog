@@ -2,20 +2,20 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CommentResource\Pages;
-use App\Filament\Resources\CommentResource\RelationManagers;
 use Filament\Forms;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Models\Comment;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Resources\Resource;
 use Filament\Tables\Filters\Filter;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\Textarea;
+use Illuminate\Database\Eloquent\Builder;
+use Modules\ContentManagement\Entities\Comment;
+use App\Filament\Resources\CommentResource\Pages;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\CommentResource\RelationManagers;
 
 class CommentResource extends Resource
 {
@@ -27,10 +27,6 @@ class CommentResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('post_user_id')
-                    ->label('Post User')
-                    ->relationship('postUser', 'id')
-                    ->required(),
                 Textarea::make('comment')
                     ->label('Comment Text')
                     ->placeholder('Enter your comment...')
@@ -42,16 +38,19 @@ class CommentResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('postUser.post.title')
-                    ->label('Post Title')
-                    ->sortable()
-                    ->searchable(),
-                TextColumn::make('postUser.roleUser.user.name')
-                    ->label('Commented By')
-                    ->sortable(),
+
+                TextColumn::make('id')
+                        ->label('ID')
+                        ->sortable()
+                        ->searchable()
+                        ->icon('heroicon-o-hashtag')
+                        ->color('gray')
+                        ->width(65),
+                        
                 TextColumn::make('comment')
                     ->label('Comment Text')
                     ->limit(50),
+                    
                 TextColumn::make('created_at')
                     ->label('Created At')
                     ->dateTime()

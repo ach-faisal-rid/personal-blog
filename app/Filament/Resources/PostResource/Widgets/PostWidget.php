@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\PostResource\Widgets;
 
 use Filament\Widgets\Widget;
-use App\Models\Post;
+use Modules\ContentManagement\Entities\Post;
 
 class PostWidget extends Widget
 {

@@ -1,14 +1,12 @@
 <x-filament::widget>
-    <x-filament::card>
-        <h2 class="text-lg font-bold">Post Statistics 🚀</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-
+    <x-filament::card class="p-4">
+        <h2 class="text-lg font-bold mb-3">Post Statistics 🚀</h2>
+        <div class="flex justify-center">
             <!-- Statistik Total Post -->
-            <div class="p-4 bg-blue-100 rounded-lg text-center">
+            <div class="px-4 py-3 bg-blue-100 rounded-lg text-center w-full max-w-[200px]">
                 <p class="text-2xl font-bold">{{ $total }}</p>
-                <p>Total Posts</p>
+                <p class="text-sm">Total Posts</p>
             </div>
-            
         </div>
     </x-filament::card>
 </x-filament::widget>
