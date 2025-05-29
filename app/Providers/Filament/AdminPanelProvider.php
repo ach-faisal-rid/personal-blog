@@ -9,6 +9,7 @@ use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use App\Filament\Resources\PostResource\Widgets\PostChart;
 use App\Filament\Resources\PostResource\Widgets\PostWidget;
+use App\Filament\Resources\ThumbnailResource\Widgets\ThumbStats;
 use App\Filament\Resources\UserResource\Widgets\UserStats;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
@@ -46,6 +47,7 @@ class AdminPanelProvider extends PanelProvider
                 PostWidget::class,
                 UserStats::class,
                 PostChart::class,
+                ThumbStats::class,
             ])
             ->middleware([
                 EncryptCookies::class,
